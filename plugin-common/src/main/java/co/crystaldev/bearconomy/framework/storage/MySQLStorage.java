@@ -150,7 +150,7 @@ public final class MySQLStorage extends EconomyStorage {
         BigDecimal balance = BigDecimal.ZERO;
 
         String tableName = "currency_" + this.currency.getId();
-        String query = String.format("SELECT `balance` FROM %s WHERE uuid = ?", tableName);
+        String query = String.format("SELECT balance FROM %s WHERE uuid = ?", tableName);
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setObject(1, party.getId().toString());
             statement.execute();
