@@ -2,8 +2,7 @@ package co.crystaldev.bearconomy.economy;
 
 import co.crystaldev.bearconomy.economy.transaction.Transaction;
 import co.crystaldev.bearconomy.party.Party;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,10 +13,8 @@ import java.math.BigDecimal;
  *
  * @since 0.1.0
  */
-@AllArgsConstructor @Getter
+@Data
 public class Response {
-
-    public static final String REASON_NOT_IMPLEMENTED = "not implemented";
 
     /**
      * The party involved in the transaction.
@@ -71,10 +68,11 @@ public class Response {
      * Provides a reason for the transaction result.
      *
      * @return The reason for the transaction result.
+     * @see Reasons
      */
     @Nullable
     public String getReason() {
-        return this.result == Result.NOT_IMPLEMENTED ? REASON_NOT_IMPLEMENTED : this.reason;
+        return this.result == Result.NOT_IMPLEMENTED ? Reasons.NOT_IMPLEMENTED : this.reason;
     }
 
     /**

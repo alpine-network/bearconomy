@@ -32,12 +32,17 @@ public interface Party {
     String getName();
 
     @NotNull
-    static PlayerParty player(@NotNull OfflinePlayer player) {
+    static Party player(@NotNull OfflinePlayer player) {
         return new PlayerParty(player);
     }
 
     @NotNull
-    static Stream<PlayerParty> allPlayers() {
+    static Party id(@NotNull UUID id) {
+        return new GenericParty(id);
+    }
+
+    @NotNull
+    static Stream<Party> allPlayers() {
         return Bukkit.getOnlinePlayers().stream().map(Party::player);
     }
 }

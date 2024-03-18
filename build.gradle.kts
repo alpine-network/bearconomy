@@ -32,8 +32,6 @@ allprojects {
 
     configurations.create("shaded")
     dependencies {
-        "shaded"(group = "org.jetbrains", name = "annotations", version = "24.1.0")
-
         compileOnly(group = "org.spigotmc", name = "spigot-api", version = project.property("spigot_version") as String)
         compileOnly(group = "co.crystaldev", name = "alpinecore", version = "0.3.5")
         compileOnly(group = "me.clip", name = "placeholderapi", version = "2.11.5")

@@ -1,8 +1,7 @@
 package co.crystaldev.bearconomy.economy;
 
 /**
- * @author BestBearr <crumbygames12@gmail.com>
- * @since 03/17/2024
+ * @since 0.1.0
  */
 public enum Result {
     SUCCESS,

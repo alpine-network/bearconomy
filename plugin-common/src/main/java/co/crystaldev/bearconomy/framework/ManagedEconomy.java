@@ -1,43 +1,76 @@
 package co.crystaldev.bearconomy.framework;
 
 import co.crystaldev.bearconomy.economy.Economy;
+import co.crystaldev.bearconomy.economy.EconomyConfig;
 import co.crystaldev.bearconomy.economy.Response;
 import co.crystaldev.bearconomy.economy.currency.Currency;
 import co.crystaldev.bearconomy.economy.transaction.Transaction;
+import co.crystaldev.bearconomy.framework.config.Config;
+import co.crystaldev.bearconomy.framework.storage.EconomyStorage;
+import co.crystaldev.bearconomy.framework.storage.GenericStorage;
+import co.crystaldev.bearconomy.framework.storage.JsonStorage;
+import co.crystaldev.bearconomy.framework.storage.MySQLStorage;
 import co.crystaldev.bearconomy.party.Party;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 
 /**
  * @since 0.1.0
  */
-@AllArgsConstructor @Getter
+@Getter
 public final class ManagedEconomy implements Economy {
 
     private final String id;
 
     private final Currency currency;
 
+    private final EconomyStorage storage;
+
+    ManagedEconomy(@NotNull String id, @NotNull Currency currency, @Nullable EconomyConfig economyConfig) {
+        this.id = id;
+        this.currency = currency;
+        if (economyConfig == null) {
+            economyConfig = new EconomyConfig(null);
+        }
+
+        Config config = Config.getInstance();
+        switch (config.storageType) {
+            case MYSQL:
+                this.storage = new MySQLStorage(id, currency, economyConfig);
+                break;
+            case JSON:
+                this.storage = new JsonStorage(id, currency, economyConfig);
+                break;
+            default:
+                this.storage = new GenericStorage(id, currency, economyConfig);
+        }
+    }
+
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.storage.isEnabled();
     }
 
     @Override
     public @NotNull BigDecimal getBalance(@NotNull Party party) {
-        return null;
+        return this.storage.getBalance(party);
     }
 
     @Override
-    public @NotNull Response deposit(@NotNull Party party, @NotNull Transaction transaction) {
-        return null;
+    public @NotNull Response deposit(@NotNull Party party, @NotNull Transaction transaction, boolean force) {
+        return this.storage.deposit(party, transaction, force);
     }
 
     @Override
-    public @NotNull Response withdraw(@NotNull Party party, @NotNull Transaction transaction) {
-        return null;
+    public @NotNull Response withdraw(@NotNull Party party, @NotNull Transaction transaction, boolean force) {
+        return this.storage.withdraw(party, transaction, force);
+    }
+
+    @Override
+    public void flush() {
+        this.storage.flush();
     }
 }

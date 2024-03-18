@@ -5,6 +5,8 @@ import co.crystaldev.bearconomy.Bearconomy;
 import co.crystaldev.bearconomy.economy.Economy;
 import co.crystaldev.bearconomy.economy.EconomyConfig;
 import co.crystaldev.bearconomy.economy.currency.Currency;
+import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,22 +19,52 @@ import java.util.Optional;
  */
 public final class BearconomyPlugin extends AlpinePlugin implements Bearconomy {
 
+    private static final long PERSIST_TASK_PERIOD = 3600L; // ~3m in ticks
+
+    @Getter
+    private static BearconomyPlugin instance;
+    { instance =  this; }
+
     private final Map<String, Economy> idToEconomy = new HashMap<>();
 
     private final Map<Currency, Economy> currencyToEconomy = new HashMap<>();
 
+    private int taskId = -1;
+
+    @Override
+    public void onStart() {
+        this.registerEconomy("default", Economy.DEFAULT_CURRENCY);
+        this.taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
+            for (Economy economy : this.idToEconomy.values()) {
+                economy.flush();
+            }
+        }, 0L, PERSIST_TASK_PERIOD);
+    }
+
+    @Override
+    public void onStop() {
+        if (this.taskId != -1) {
+            Bukkit.getScheduler().cancelTask(this.taskId);
+        }
+
+        for (Economy economy : this.idToEconomy.values()) {
+            economy.flush();
+            economy.shutdown();
+        }
+    }
+
     @Override
     public void registerEconomy(@NotNull Economy economy) {
-        this.log(String.format("Registering economy %s", economy.getId()));
+        this.log(String.format("Registering economy \"%s\"", economy.getId()));
         this.idToEconomy.put(economy.getId(), economy);
         this.currencyToEconomy.put(economy.getCurrency(), economy);
     }
 
     @Override
     public void registerEconomy(@NotNull String id, @NotNull Currency currency, @Nullable EconomyConfig config) {
-        this.log(String.format("Registering managed economy %s", id));
+        this.log(String.format("Registering managed economy \"%s\"", id));
 
-        ManagedEconomy economy = new ManagedEconomy(id, currency);
+        ManagedEconomy economy = new ManagedEconomy(id, currency, config);
         this.idToEconomy.put(id, economy);
         this.currencyToEconomy.put(currency, economy);
     }

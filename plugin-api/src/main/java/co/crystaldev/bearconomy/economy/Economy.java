@@ -53,7 +53,7 @@ public interface Economy {
     /**
      * Checks if a party has at least a certain balance.
      *
-     * @param party The party to check.
+     * @param party   The party to check.
      * @param balance The minimum balance to check for.
      * @return True if the party has at least the specified balance.
      */
@@ -64,7 +64,7 @@ public interface Economy {
     /**
      * Checks if a party has at least a certain balance.
      *
-     * @param party The party to check.
+     * @param party   The party to check.
      * @param balance The minimum balance to check for, as a double.
      * @return True if the party has at least the specified balance.
      */
@@ -75,48 +75,108 @@ public interface Economy {
     /**
      * Deposits an amount to a party's balance.
      *
-     * @param party The party to deposit to.
+     * @param party       The party to deposit to.
+     * @param transaction The transaction details.
+     * @param force       Whether to force the transaction.
+     * @return A {@link Response} indicating the outcome.
+     */
+    @NotNull
+    Response deposit(@NotNull Party party, @NotNull Transaction transaction, boolean force);
+
+    /**
+     * Deposits an amount to a party's balance.
+     *
+     * @param party       The party to deposit to.
      * @param transaction The transaction details.
      * @return A {@link Response} indicating the outcome.
      */
     @NotNull
-    Response deposit(@NotNull Party party, @NotNull Transaction transaction);
+    default Response deposit(@NotNull Party party, @NotNull Transaction transaction) {
+        return this.deposit(party, transaction, false);
+    }
 
     /**
      * Withdraws an amount from a party's balance.
      *
-     * @param party The party to withdraw from.
+     * @param party       The party to withdraw from.
+     * @param transaction The transaction details.
+     * @param force       Whether to force the transaction.
+     * @return A {@link Response} indicating the outcome.
+     */
+    @NotNull
+    Response withdraw(@NotNull Party party, @NotNull Transaction transaction, boolean force);
+
+    /**
+     * Withdraws an amount from a party's balance.
+     *
+     * @param party       The party to withdraw from.
      * @param transaction The transaction details.
      * @return A {@link Response} indicating the outcome.
      */
     @NotNull
-    Response withdraw(@NotNull Party party, @NotNull Transaction transaction);
+    default Response withdraw(@NotNull Party party, @NotNull Transaction transaction) {
+        return this.withdraw(party, transaction, false);
+    }
 
     /**
      * Sets a party's balance to a specific amount.
      *
-     * @param party The party whose balance is being set.
+     * @param party  The party whose balance is being set.
      * @param amount The new balance amount.
+     * @param force  Whether to force the transaction.
      * @return A {@link Response} indicating the outcome.
      */
     @NotNull
-    default Response set(@NotNull Party party, @Nullable BigDecimal amount) {
+    default Response set(@NotNull Party party, @Nullable BigDecimal amount, boolean force) {
         if (amount == null) {
             amount = BigDecimal.ZERO;
         }
 
         Transaction transaction = Transaction.of(this.getBalance(party), "Bearconomy - clearing balance");
-        Response response = this.withdraw(party, transaction);
+        Response response = this.withdraw(party, transaction, force);
         if (response.failed()) {
             return response;
         }
 
         transaction = Transaction.of(amount, "Bearconomy - setting new balance");
-        return this.deposit(party, transaction);
+        return this.deposit(party, transaction, force);
     }
 
+    /**
+     * Sets a party's balance to a specific amount.
+     *
+     * @param party  The party whose balance is being set.
+     * @param amount The new balance amount.
+     * @return A {@link Response} indicating the outcome.
+     */
+    @NotNull
+    default Response set(@NotNull Party party, @Nullable BigDecimal amount) {
+        return this.set(party, amount, false);
+    }
+
+    /**
+     * Sets a party's balance to a specific amount.
+     *
+     * @param party  The party whose balance is being set.
+     * @param amount The new balance amount.
+     * @return A {@link Response} indicating the outcome.
+     */
     @NotNull
     default Response set(@NotNull Party party, double amount) {
         return this.set(party, new BigDecimal(amount));
+    }
+
+    /**
+     * Flushes data for this economy.
+     */
+    default void flush() {
+        // NO OP
+    }
+
+    /**
+     * Prepare this economy to be closed.
+     */
+    default void shutdown() {
+        // NO OP
     }
 }
