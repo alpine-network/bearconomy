@@ -1,0 +1,9 @@
+
+main: co.crystaldev.bearconomy.framework.BearconomyPlugin
+name: ${pluginName}
+description: ${pluginDescription}
+version: ${pluginVersionRaw}
+authors: [ BestBearr ]
+api-version: 1.13
+depend:
+  - AlpineCore
