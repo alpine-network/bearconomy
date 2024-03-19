@@ -25,7 +25,7 @@ public final class OfflinePlayerArgument extends AlpineArgumentResolver<OfflineP
     @Override
     protected ParseResult<OfflinePlayer> parse(Invocation<CommandSender> invocation, Argument<OfflinePlayer> context, String argument) {
         OfflinePlayer player = Bukkit.getOfflinePlayer(argument);
-        if (player != null) {
+        if (player != null && player.hasPlayedBefore()) {
             return ParseResult.success(player);
         }
 
