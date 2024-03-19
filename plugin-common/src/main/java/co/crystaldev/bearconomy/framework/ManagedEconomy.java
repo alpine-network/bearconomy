@@ -8,7 +8,7 @@ import co.crystaldev.bearconomy.economy.transaction.Transaction;
 import co.crystaldev.bearconomy.framework.config.Config;
 import co.crystaldev.bearconomy.framework.storage.EconomyStorage;
 import co.crystaldev.bearconomy.framework.storage.GenericStorage;
-import co.crystaldev.bearconomy.framework.storage.JsonStorage;
+import co.crystaldev.bearconomy.framework.storage.GsonStorage;
 import co.crystaldev.bearconomy.framework.storage.MySQLStorage;
 import co.crystaldev.bearconomy.party.Party;
 import lombok.Getter;
@@ -27,25 +27,25 @@ public final class ManagedEconomy implements Economy {
 
     private final Currency currency;
 
+    private final EconomyConfig config;
+
     private final EconomyStorage storage;
 
     ManagedEconomy(@NotNull String id, @NotNull Currency currency, @Nullable EconomyConfig economyConfig) {
         this.id = id;
         this.currency = currency;
-        if (economyConfig == null) {
-            economyConfig = new EconomyConfig(null);
-        }
+        this.config = economyConfig == null ? new EconomyConfig(null) : economyConfig;
 
         Config config = Config.getInstance();
         switch (config.storageType) {
             case MYSQL:
-                this.storage = new MySQLStorage(id, currency, economyConfig);
+                this.storage = new MySQLStorage(id, currency, this.config);
                 break;
             case JSON:
-                this.storage = new JsonStorage(id, currency, economyConfig);
+                this.storage = new GsonStorage(id, currency, this.config);
                 break;
             default:
-                this.storage = new GenericStorage(id, currency, economyConfig);
+                this.storage = new GenericStorage(id, currency, this.config);
         }
     }
 

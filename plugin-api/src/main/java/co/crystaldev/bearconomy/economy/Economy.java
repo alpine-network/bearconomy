@@ -27,6 +27,14 @@ public interface Economy {
     String getId();
 
     /**
+     * Retrieves the configuration used by this economy.
+     *
+     * @return The current {@link EconomyConfig} instance.
+     */
+    @NotNull
+    EconomyConfig getConfig();
+
+    /**
      * Checks if the economy system is currently enabled.
      *
      * @return True if enabled, false otherwise.

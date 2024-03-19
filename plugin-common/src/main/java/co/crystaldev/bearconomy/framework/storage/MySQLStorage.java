@@ -61,7 +61,7 @@ public final class MySQLStorage extends EconomyStorage {
             this.initializing = true;
 
             try (Connection connection = this.connection.getConnection()) {
-                createTable(connection, MySQLStorage.this.currency);
+                ensureTable(connection, MySQLStorage.this.currency);
             }
             catch (SQLException ex) {
                 ex.printStackTrace();
@@ -174,7 +174,7 @@ public final class MySQLStorage extends EconomyStorage {
         }
     }
 
-    private boolean updateBalance(@NotNull Connection connection, @NotNull Party party, @NotNull BigDecimal newBalance) {
+    private void updateBalance(@NotNull Connection connection, @NotNull Party party, @NotNull BigDecimal newBalance) {
         String tableName = "currency_" + this.currency.getId();
         String upsertSql = String.format("INSERT INTO %s (uuid, balance) VALUES (?, ?) ON DUPLICATE KEY UPDATE balance = VALUES(balance)", tableName);
 
@@ -182,15 +182,13 @@ public final class MySQLStorage extends EconomyStorage {
             statement.setString(1, party.getId().toString());
             statement.setBigDecimal(2, newBalance);
             statement.executeUpdate();
-            return true;
         }
         catch (SQLException ex) {
             ex.printStackTrace();
-            return false;
         }
     }
 
-    private static void createTable(@NotNull Connection connection, @NotNull Currency currency) throws SQLException {
+    private static void ensureTable(@NotNull Connection connection, @NotNull Currency currency) throws SQLException {
         String tableName = "currency_" + currency.getId();
         try (Statement stmt = connection.createStatement()) {
             String sql = "CREATE TABLE IF NOT EXISTS " + tableName + " (" +

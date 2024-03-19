@@ -1,6 +1,7 @@
 package co.crystaldev.bearconomy.framework.config;
 
 import co.crystaldev.alpinecore.framework.config.AlpineConfig;
+import co.crystaldev.alpinecore.framework.config.object.ConfigMessage;
 import de.exlll.configlib.Comment;
 import lombok.Getter;
 
@@ -35,6 +36,57 @@ public final class Config extends AlpineConfig {
     public String username = "username";
     public String password = "password";
     public String database = "bearconomy";
+
+    @Comment({
+            "",
+            "Plugin Messages"
+    })
+    public ConfigMessage deposit = ConfigMessage.of(
+            "%prefix% Deposited <highlight>%amount%</highlight> into the account of <highlight>%player%</highlight>");
+
+    public ConfigMessage deposited = ConfigMessage.of(
+            "%prefix% <highlight>%amount%</highlight> has been deposited into your account");
+
+    public ConfigMessage withdraw = ConfigMessage.of(
+            "%prefix% Withdrew <highlight>%amount%</highlight> from the account of <highlight>%player%</highlight>");
+
+    public ConfigMessage withdrew = ConfigMessage.of(
+            "%prefix% <highlight>%amount%</highlight> has been withdrawn from your account");
+
+    public ConfigMessage paymentSent = ConfigMessage.of(
+            "%prefix% <highlight>%amount%</highlight> was sent to <highlight>%player%</highlight>");
+
+    public ConfigMessage paymentReceived = ConfigMessage.of(
+            "%prefix% <highlight>%amount%</highlight> was received from <highlight>%player%</highlight>");
+
+    public ConfigMessage balanceUpdatedOther = ConfigMessage.of(
+            "%prefix% Balance for <highlight>%player%</highlight> was set to <highlight>%amount%</highlight>");
+
+    public ConfigMessage balanceUpdatedSelf = ConfigMessage.of(
+            "%prefix% Your balance was set to <highlight>%amount%</highlight>");
+
+    public ConfigMessage balanceOther = ConfigMessage.of(
+            "%prefix% Balance of %player%: <highlight>%amount%</highlight>");
+
+    public ConfigMessage balanceSelf = ConfigMessage.of(
+            "%prefix% Balance: <highlight>%amount%</highlight>");
+
+    public ConfigMessage error = ConfigMessage.of(
+            "%error_prefix% Unable to complete transaction:",
+            "    <i><error_highlight>%response%</error_highlight></i>"
+    );
+
+    public ConfigMessage oversizeBalanceOther = ConfigMessage.of(
+            "The balance of <error_highlight>%player%</error_highlight> would exceed the balance capacity of <error_highlight>%limit%</error_highlight>");
+
+    public ConfigMessage oversizeBalanceSelf = ConfigMessage.of(
+            "Your balance would exceed the balance limit of <error_highlight>%limit%</error_highlight>");
+
+    public ConfigMessage insufficientBalanceOther = ConfigMessage.of(
+            "<error_highlight>%player%</error_highlight> does not have sufficient funds");
+
+    public ConfigMessage insufficientBalanceSelf = ConfigMessage.of(
+            "You not have sufficient funds");
 
     public enum StorageType {
         // TODO: More storage types for managed economies

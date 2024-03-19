@@ -54,6 +54,12 @@ public final class BearconomyPlugin extends AlpinePlugin implements Bearconomy {
     }
 
     @Override
+    public void setupDefaultVariables(@NotNull VariableConsumer variableConsumer) {
+        variableConsumer.addVariable("prefix", "<bracket>[<info>Bearconomy</info>]</bracket>");
+        variableConsumer.addVariable("error_prefix", "<bracket>[<error>Bearconomy</error>]</bracket>");
+    }
+
+    @Override
     public void registerEconomy(@NotNull Economy economy) {
         this.log(String.format("Registering economy \"%s\"", economy.getId()));
         this.idToEconomy.put(economy.getId(), economy);

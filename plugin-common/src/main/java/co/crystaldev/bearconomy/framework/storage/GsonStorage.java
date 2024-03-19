@@ -16,17 +16,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.math.BigDecimal;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
  * @since 0.1.0
  */
-public final class JsonStorage extends EconomyStorage {
+public final class GsonStorage extends EconomyStorage {
 
     private final Store store;
 
-    public JsonStorage(@NotNull String id, @NotNull Currency currency, @NotNull EconomyConfig config) {
+    public GsonStorage(@NotNull String id, @NotNull Currency currency, @NotNull EconomyConfig config) {
         super(id, currency, config);
 
         BearconomyPlugin instance = BearconomyPlugin.getInstance();
