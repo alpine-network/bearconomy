@@ -59,6 +59,9 @@ public final class Config extends AlpineConfig {
     public ConfigMessage paymentReceived = ConfigMessage.of(
             "%prefix% <highlight>%amount%</highlight> was received from <highlight>%player%</highlight>");
 
+    public ConfigMessage paySelf = ConfigMessage.of(
+            "%error_prefix% You are unable to send money to yourself");
+
     public ConfigMessage balanceUpdatedOther = ConfigMessage.of(
             "%prefix% Balance for <highlight>%player%</highlight> was set to <highlight>%amount%</highlight>");
 

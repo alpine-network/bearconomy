@@ -41,6 +41,7 @@ public final class BearconomyCommand extends AlpineCommand {
 
     @Execute(name = "deposit")
     @Permission("bearconomy.admin.deposit")
+    @Description("Deposit into a player's balance.")
     public void deposit(
             @Context CommandSender sender,
             @Arg("player") @Key("offlinePlayer") OfflinePlayer player,
@@ -76,6 +77,7 @@ public final class BearconomyCommand extends AlpineCommand {
 
     @Execute(name = "withdraw")
     @Permission("bearconomy.admin.withdraw")
+    @Description("Withdraw from a player's balance.")
     public void withdraw(
             @Context CommandSender sender,
             @Arg("player") @Key("offlinePlayer") OfflinePlayer player,
@@ -111,7 +113,8 @@ public final class BearconomyCommand extends AlpineCommand {
 
     @Execute(name = "set")
     @Permission("bearconomy.admin.set")
-    public void setBalance(
+    @Description("Set a player's balance.")
+    public void set(
             @Context CommandSender sender,
             @Arg("player") @Key("offlinePlayer") OfflinePlayer player,
             @Arg("amount") BigDecimal balance
@@ -142,8 +145,9 @@ public final class BearconomyCommand extends AlpineCommand {
 
     @Execute(name = "bal")
     @Shortcut({ "balance", "bal" })
-    @Permission("bearconomy.admin.balance")
-    public void showBalance(
+    @Permission("bearconomy.balance")
+    @Description("Display a player's balance.")
+    public void show(
             @Context CommandSender sender,
             @OptionalArg("player") @Key("offlinePlayer") OfflinePlayer player
     ) {
@@ -164,6 +168,59 @@ public final class BearconomyCommand extends AlpineCommand {
         Messaging.send(sender, message.build(this.plugin,
                 "player", player.getName(),
                 "amount", formattedBalance));
+    }
+
+    @Execute(name = "pay")
+    @Shortcut("pay")
+    @Permission("bearconomy.pay")
+    @Description("Send money to another player.")
+    public void pay(
+            @Context Player sender,
+            @Arg("player") @Key("offlinePlayer") OfflinePlayer player,
+            @Arg("amount") BigDecimal amount
+    ) {
+        Config config = Config.getInstance();
+        Economy economy = Bearconomy.get().getEconomy();
+        Currency currency = economy.getCurrency();
+        Party senderParty = Party.player(sender);
+        Party targetParty = Party.player(player);
+
+        // do not allow the player to pay themselves
+        if (!isDifferentPlayer(sender, player)) {
+            Messaging.send(sender, config.paySelf.build(this.plugin));
+            return;
+        }
+
+        // withdraw the money from the sender's account
+        Response response = economy.withdraw(senderParty, Transaction.of(amount, "sending money:pay:" + player.getName()));
+        if (response.failed()) {
+            Object reason = Reasons.INSUFFICIENT_BALANCE.equals(response.getReason())
+                    ? config.insufficientBalanceSelf.build(this.plugin, "player", sender.getName())
+                    : response.getReason();
+            Messaging.send(sender, config.error.build(this.plugin, "response", reason));
+            return;
+        }
+
+        // deposit the money into the recipient's account
+        response = economy.deposit(targetParty, Transaction.of(amount, "receiving money:pay:" + sender.getName()));
+        if (response.failed()) {
+            // deposit the money back into the sender's account
+            economy.deposit(senderParty, Transaction.of(amount, "rolling back:pay:" + player.getName()));
+
+            Object reason = Reasons.OVERSIZE_BALANCE.equals(response.getReason()) && economy.getConfig().hasMaxBalance()
+                    ? config.oversizeBalanceOther.build(this.plugin, "player", player.getName(), "limit", currency.format(economy.getConfig().getMaxBalance()))
+                    : response.getReason();
+            Messaging.send(sender, config.error.build(this.plugin, "response", reason));
+        }
+
+        // notify players
+        Messaging.send(sender, config.paymentSent.build(this.plugin,
+                "amount", currency.format(amount),
+                "player", player.getName()));
+
+        Messaging.attemptSend(player, config.paymentReceived.build(this.plugin,
+                "amount", currency.format(amount),
+                "player", sender.getName()));
     }
 
     private static boolean isDifferentPlayer(@NotNull CommandSender sender, @NotNull OfflinePlayer player) {
