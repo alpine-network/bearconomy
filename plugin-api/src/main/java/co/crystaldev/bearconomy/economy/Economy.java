@@ -18,6 +18,8 @@ public interface Economy {
 
     Currency DEFAULT_CURRENCY = new DefaultCurrency();
 
+    String DEFAULT_ID = "default";
+
     /**
      * Returns the unique identifier for this economy.
      *

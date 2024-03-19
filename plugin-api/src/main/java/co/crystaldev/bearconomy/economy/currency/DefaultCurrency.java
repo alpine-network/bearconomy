@@ -8,7 +8,7 @@ import java.text.DecimalFormat;
 /**
  * @since 0.1.0
  */
-public final class DefaultCurrency implements Currency {
+public class DefaultCurrency implements Currency {
 
     private final DecimalFormat decimalFormat = new DecimalFormat("#,###.##");
 

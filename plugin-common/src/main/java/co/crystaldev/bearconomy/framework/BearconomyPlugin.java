@@ -33,7 +33,7 @@ public final class BearconomyPlugin extends AlpinePlugin implements Bearconomy {
 
     @Override
     public void onStart() {
-        this.registerEconomy("default", Economy.DEFAULT_CURRENCY);
+        this.registerEconomy(Economy.DEFAULT_ID, Economy.DEFAULT_CURRENCY);
         this.taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
             for (Economy economy : this.idToEconomy.values()) {
                 economy.flush();

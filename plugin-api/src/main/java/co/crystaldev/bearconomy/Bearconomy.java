@@ -58,7 +58,7 @@ public interface Bearconomy {
      */
     @NotNull
     default Economy getEconomy() {
-        return this.getEconomy(Economy.DEFAULT_CURRENCY)
+        return this.getEconomy(Economy.DEFAULT_ID)
                 .orElseThrow(() -> new IllegalStateException("no default currency registered"));
     }
 
