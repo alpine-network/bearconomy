@@ -2,6 +2,7 @@ package co.crystaldev.bearconomy.framework.storage;
 
 import co.crystaldev.alpinecore.framework.storage.CachingStrategy;
 import co.crystaldev.alpinecore.util.DatabaseConnection;
+import co.crystaldev.alpinecore.util.UuidTypeAdapter;
 import co.crystaldev.bearconomy.economy.EconomyConfig;
 import co.crystaldev.bearconomy.economy.Reasons;
 import co.crystaldev.bearconomy.economy.Response;
@@ -13,6 +14,8 @@ import co.crystaldev.bearconomy.party.Party;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
@@ -21,6 +24,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 /**
  * @since 0.1.0
@@ -39,7 +44,9 @@ public final class MySQLStorage extends EconomyStorage {
         super(id, currency, economyConfig);
 
         // setup caching
-        CachingStrategy strategy = CachingStrategy.builder().build();
+        CachingStrategy strategy = CachingStrategy.builder()
+                .expireTime(2L, TimeUnit.HOURS)
+                .build();
         this.readCache = CacheBuilder.newBuilder()
                 .maximumSize(strategy.getMaximumSize())
                 .expireAfterAccess(strategy.getExpireTimeValue(), strategy.getExpireTimeUnit())
@@ -58,6 +65,7 @@ public final class MySQLStorage extends EconomyStorage {
         // connect to the database
         this.connection = DatabaseHandler.getInstance().getSQLConnection();
         new Thread(() -> {
+            // ensure the database schema is correct
             this.initializing = true;
 
             try (Connection connection = this.connection.getConnection()) {
@@ -68,6 +76,20 @@ public final class MySQLStorage extends EconomyStorage {
             }
 
             this.initializing = false;
+
+            // preload players into database
+            try (Connection conn = this.connection.getConnection();
+                 Statement statement = conn.createStatement()) {
+                ResultSet resultSet = statement.executeQuery("SELECT * FROM currency_" + currency.getId());
+                while (resultSet.next()) {
+                    UUID uuid = UuidTypeAdapter.fromString(resultSet.getString("uuid"));
+                    BigDecimal balance = resultSet.getBigDecimal("balance");
+                    this.readCache.put(uuid, balance);
+                }
+            }
+            catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }).start();
     }
 

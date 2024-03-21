@@ -41,6 +41,11 @@ public final class Config extends AlpineConfig {
             "",
             "Plugin Messages"
     })
+    public ConfigMessage error = ConfigMessage.of(
+            "%error_prefix% Unable to complete transaction:",
+            "    <i><error_highlight>%response%</error_highlight></i>"
+    );
+
     public ConfigMessage deposit = ConfigMessage.of(
             "%prefix% Deposited <highlight>%amount%</highlight> into the account of <highlight>%player%</highlight>");
 
@@ -74,11 +79,22 @@ public final class Config extends AlpineConfig {
     public ConfigMessage balanceSelf = ConfigMessage.of(
             "%prefix% Balance: <highlight>%amount%</highlight>");
 
-    public ConfigMessage error = ConfigMessage.of(
-            "%error_prefix% Unable to complete transaction:",
-            "    <i><error_highlight>%response%</error_highlight></i>"
-    );
+    public ConfigMessage sortingBalances = ConfigMessage.of(
+            "%prefix% Sorting balances of <highlight>%amount% players</highlight>...");
 
+    public ConfigMessage balanceTopTitle = ConfigMessage.of(
+            "Balance Top");
+
+    public ConfigMessage serverTotal = ConfigMessage.of(
+            "<highlight>Server Total:</highlight> <emphasis>%amount%</emphasis>");
+
+    public ConfigMessage balanceTopEntry = ConfigMessage.of(
+            "<highlight>#%position%</highlight> %player%: <emphasis>%amount%</emphasis>");
+
+    @Comment({
+            "",
+            "Error Messages"
+    })
     public ConfigMessage oversizeBalanceOther = ConfigMessage.of(
             "The balance of <error_highlight>%player%</error_highlight> would exceed the balance capacity of <error_highlight>%limit%</error_highlight>");
 

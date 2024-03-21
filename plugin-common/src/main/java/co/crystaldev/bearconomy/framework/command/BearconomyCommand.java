@@ -3,6 +3,8 @@ package co.crystaldev.bearconomy.framework.command;
 import co.crystaldev.alpinecore.AlpinePlugin;
 import co.crystaldev.alpinecore.framework.command.AlpineCommand;
 import co.crystaldev.alpinecore.framework.config.object.ConfigMessage;
+import co.crystaldev.alpinecore.util.Components;
+import co.crystaldev.alpinecore.util.Formatting;
 import co.crystaldev.alpinecore.util.Messaging;
 import co.crystaldev.bearconomy.Bearconomy;
 import co.crystaldev.bearconomy.economy.Economy;
@@ -10,7 +12,9 @@ import co.crystaldev.bearconomy.economy.Reasons;
 import co.crystaldev.bearconomy.economy.Response;
 import co.crystaldev.bearconomy.economy.currency.Currency;
 import co.crystaldev.bearconomy.economy.transaction.Transaction;
+import co.crystaldev.bearconomy.framework.leaderboard.Leaderboard;
 import co.crystaldev.bearconomy.framework.config.Config;
+import co.crystaldev.bearconomy.framework.leaderboard.LeaderboardEntry;
 import co.crystaldev.bearconomy.party.Party;
 import dev.rollczi.litecommands.annotations.argument.Arg;
 import dev.rollczi.litecommands.annotations.argument.Key;
@@ -21,12 +25,19 @@ import dev.rollczi.litecommands.annotations.execute.Execute;
 import dev.rollczi.litecommands.annotations.optional.OptionalArg;
 import dev.rollczi.litecommands.annotations.permission.Permission;
 import dev.rollczi.litecommands.annotations.shortcut.Shortcut;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author BestBearr <crumbygames12@gmail.com>
@@ -35,6 +46,9 @@ import java.math.BigDecimal;
 @Command(name = "bearconomy")
 @Description("Main command for Bearconomy.")
 public final class BearconomyCommand extends AlpineCommand {
+
+    private final Leaderboard leaderboard = new Leaderboard();
+
     BearconomyCommand(AlpinePlugin plugin) {
         super(plugin);
     }
@@ -221,6 +235,67 @@ public final class BearconomyCommand extends AlpineCommand {
         Messaging.attemptSend(player, config.paymentReceived.build(this.plugin,
                 "amount", currency.format(amount),
                 "player", sender.getName()));
+    }
+
+    @Execute(name = "balancetop")
+    @Shortcut({ "balancetop", "baltop" })
+    @Permission("bearconomy.balancetop")
+    @Description("Display the balance leaderboard.")
+    public void balanceTop(
+            @Context CommandSender sender,
+            @Arg("page") Optional<Integer> pageNumber
+    ) {
+        Config config = Config.getInstance();
+        int page = pageNumber.orElse(1);
+        Economy economy = Bearconomy.get().getEconomy();
+        Currency currency = economy.getCurrency();
+
+        CompletableFuture<List<LeaderboardEntry>> leaderboard = this.leaderboard.getForEconomy(economy);
+        if (leaderboard.isDone()) {
+            this.dispatchBalanceTop(sender, currency, page, config, leaderboard.getNow(null));
+        }
+        else if (leaderboard.isCompletedExceptionally()) {
+            Messaging.send(sender, config.error.build(this.plugin, "An unexpected error has occurred"));
+        }
+        else {
+            leaderboard.whenComplete((board, ex) -> {
+                if (ex != null) {
+                    Messaging.send(sender, config.error.build(this.plugin, "An unexpected error has occurred"));
+                    ex.printStackTrace();
+                }
+                else {
+                    this.dispatchBalanceTop(sender, currency, page, config, board);
+                }
+            });
+
+            int length = Bukkit.getOfflinePlayers().length;
+            Messaging.send(sender, config.sortingBalances.build(this.plugin, "amount", length));
+        }
+    }
+
+    private void dispatchBalanceTop(@NotNull CommandSender sender, @NotNull Currency currency, int page,
+                                    @NotNull Config config, @Nullable List<LeaderboardEntry> entries) {
+        if (entries == null) {
+            return;
+        }
+
+        AtomicReference<BigDecimal> total = new AtomicReference<>(BigDecimal.ZERO);
+
+        String command = "/bearconomy balancetop %page%";
+        Component title = config.balanceTopTitle.build(this.plugin, "type", currency.getSingularName());
+        Component compiledPage = Formatting.page(this.plugin, title, entries, command, page, 10, entry -> {
+            total.set(total.get().add(entry.getBalance()));
+
+            return config.balanceTopEntry.build(this.plugin,
+                    "position", entry.getPosition(),
+                    "player", entry.getParty().getName(),
+                    "amount", currency.format(entry.getBalance()));
+        });
+
+        Messaging.send(sender, Components.joinNewLines(
+                compiledPage,
+                config.serverTotal.build(this.plugin, "amount", currency.format(total.get()))
+        ));
     }
 
     private static boolean isDifferentPlayer(@NotNull CommandSender sender, @NotNull OfflinePlayer player) {
