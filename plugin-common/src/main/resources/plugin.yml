@@ -9,3 +9,4 @@ depend:
   - AlpineCore
 softdepend:
   - Vault
+  - PlaceholderAPI

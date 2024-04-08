@@ -4,7 +4,6 @@ import co.crystaldev.bearconomy.economy.Economy;
 import co.crystaldev.bearconomy.party.Party;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;

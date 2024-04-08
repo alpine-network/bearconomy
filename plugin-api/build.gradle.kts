@@ -6,7 +6,7 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             // Set the unshaded JAR as the main artifact
-            artifact(rootProject.tasks["jar"])
+            artifact(tasks["jar"])
 
             pom {
                 name.set("${rootProject.properties["plugin_name"]}-API")
