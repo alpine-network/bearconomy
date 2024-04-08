@@ -35,16 +35,16 @@ public interface Bearconomy {
     /**
      * Registers a new, managed economy with a specific configuration.
      *
-     * @param id The unique identifier for the economy.
+     * @param id       The unique identifier for the economy.
      * @param currency The currency used by this economy.
-     * @param config The configuration settings for the economy.
+     * @param config   The configuration settings for the economy.
      */
     void registerEconomy(@NotNull String id, @NotNull Currency currency, @Nullable EconomyConfig config);
 
     /**
      * Registers a new, managed economy with default configuration.
      *
-     * @param id The unique identifier for the economy.
+     * @param id       The unique identifier for the economy.
      * @param currency The currency used by this economy.
      */
     default void registerEconomy(@NotNull String id, @NotNull Currency currency) {
