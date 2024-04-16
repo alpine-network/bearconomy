@@ -5,6 +5,8 @@ import co.crystaldev.alpinecore.framework.config.object.ConfigMessage;
 import de.exlll.configlib.Comment;
 import lombok.Getter;
 
+import java.math.BigDecimal;
+
 /**
  * @since 0.1.0
  */
@@ -36,6 +38,14 @@ public final class Config extends AlpineConfig {
     public String username = "username";
     public String password = "password";
     public String database = "bearconomy";
+
+    @Comment({
+            "",
+            "Standard Economy Configuration"
+    })
+    public boolean enforceMaxBalance = true;
+
+    public BigDecimal balanceCapacity = new BigDecimal(25_000_000);
 
     @Comment({
             "",

@@ -5,6 +5,7 @@ import co.crystaldev.bearconomy.Bearconomy;
 import co.crystaldev.bearconomy.economy.Economy;
 import co.crystaldev.bearconomy.economy.EconomyConfig;
 import co.crystaldev.bearconomy.economy.currency.Currency;
+import co.crystaldev.bearconomy.framework.config.Config;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
@@ -69,6 +70,11 @@ public final class BearconomyPlugin extends AlpinePlugin implements Bearconomy {
     @Override
     public void registerEconomy(@NotNull String id, @NotNull Currency currency, @Nullable EconomyConfig config) {
         this.log(String.format("Registering managed economy \"%s\"", id));
+
+        Config bearconomyConfig = Config.getInstance();
+        if (bearconomyConfig.enforceMaxBalance && config == null) {
+            config = new EconomyConfig(bearconomyConfig.balanceCapacity);
+        }
 
         ManagedEconomy economy = new ManagedEconomy(id, currency, config);
         this.idToEconomy.put(id, economy);
