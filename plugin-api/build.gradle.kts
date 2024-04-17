@@ -2,20 +2,14 @@ plugins {
     id("maven-publish")
 }
 
+java {
+    withSourcesJar()
+}
+
 publishing {
     publications {
         create<MavenPublication>("maven") {
-            // Set the unshaded JAR as the main artifact
-            artifact(tasks["jar"])
-
-            // Define a task to package the source code into a sources JAR
-            val sourcesJar by tasks.registering(Jar::class) {
-                archiveClassifier.set("sources")
-                from(sourceSets.main.get().allSource)
-            }
-
-            // Include the sources JAR as an additional artifact
-            artifact(sourcesJar)
+            from(components["java"])
 
             pom {
                 name.set("${rootProject.properties["plugin_name"]}-API")
