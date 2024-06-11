@@ -52,12 +52,19 @@ public final class GsonStorage extends EconomyStorage {
         BigDecimal balance = this.getBalance(party);
         BigDecimal newBalance = balance.add(transaction.getAmount());
 
-        if (!force && this.config.hasMaxBalance() && newBalance.compareTo(this.config.getMaxBalance()) > 0) {
-            return new Response(party, transaction, balance, balance, Reasons.OVERSIZE_BALANCE, Result.FAILURE);
+        String reason = null;
+        if (this.config.hasMaxBalance() && newBalance.compareTo(this.config.getMaxBalance()) > 0) {
+            if (force) {
+                reason = Reasons.OVERSIZE_BALANCE;
+                newBalance = this.config.getMaxBalance();
+            }
+            else {
+                return new Response(party, transaction, balance, balance, Reasons.OVERSIZE_BALANCE, Result.FAILURE);
+            }
         }
 
         this.store.put(party.getId(), newBalance);
-        return new Response(party, transaction, balance, newBalance, null, Result.SUCCESS);
+        return new Response(party, transaction, balance, newBalance, reason, Result.SUCCESS);
     }
 
     @Override
@@ -73,6 +80,11 @@ public final class GsonStorage extends EconomyStorage {
         return new Response(party, transaction, balance, newBalance, null, Result.SUCCESS);
     }
 
+    @Override
+    public void flush() {
+        this.store.deactivate(null);
+    }
+
     private static final class Store extends AlpineStore<UUID, BigDecimal> implements Initializable {
 
         Store(@NotNull AlpinePlugin plugin, @NotNull  String id) {
@@ -80,6 +92,7 @@ public final class GsonStorage extends EconomyStorage {
                     .directory(new File(plugin.getDataFolder(), "storage/" + id))
                     .dataType(BigDecimal.class)
                     .build(plugin));
+            this.activate(plugin);
         }
 
         @Deprecated

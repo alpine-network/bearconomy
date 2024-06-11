@@ -14,8 +14,6 @@ import co.crystaldev.bearconomy.party.Party;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
@@ -25,7 +23,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Stream;
 
 /**
  * @since 0.1.0
@@ -116,13 +113,20 @@ public final class MySQLStorage extends EconomyStorage {
             balance = this.getBalance(party);
             BigDecimal newBalance = balance.add(transaction.getAmount());
 
-            if (!force && this.config.hasMaxBalance() && newBalance.compareTo(this.config.getMaxBalance()) > 0) {
-                return new Response(party, transaction, balance, balance, Reasons.OVERSIZE_BALANCE, Result.FAILURE);
+            String reason = null;
+            if (this.config.hasMaxBalance() && newBalance.compareTo(this.config.getMaxBalance()) > 0) {
+                if (force) {
+                    reason = Reasons.OVERSIZE_BALANCE;
+                    newBalance = this.config.getMaxBalance();
+                }
+                else {
+                    return new Response(party, transaction, balance, balance, Reasons.OVERSIZE_BALANCE, Result.FAILURE);
+                }
             }
 
             this.writeCache.put(party.getId(), newBalance);
             this.readCache.refresh(party.getId());
-            return new Response(party, transaction, balance, newBalance, null, Result.SUCCESS);
+            return new Response(party, transaction, balance, newBalance, reason, Result.SUCCESS);
         }
 
         return new Response(party, transaction, balance, balance, Reasons.TRANSACTION_ERROR, Result.FAILURE);
