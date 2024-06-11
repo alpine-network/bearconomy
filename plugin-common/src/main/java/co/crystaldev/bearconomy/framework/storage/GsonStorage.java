@@ -80,11 +80,6 @@ public final class GsonStorage extends EconomyStorage {
         return new Response(party, transaction, balance, newBalance, null, Result.SUCCESS);
     }
 
-    @Override
-    public void flush() {
-        this.store.deactivate(null);
-    }
-
     private static final class Store extends AlpineStore<UUID, BigDecimal> implements Initializable {
 
         Store(@NotNull AlpinePlugin plugin, @NotNull  String id) {
