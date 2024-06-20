@@ -225,6 +225,7 @@ public final class BearconomyCommand extends AlpineCommand {
                     ? config.oversizeBalanceOther.build(this.plugin, "player", player.getName(), "limit", currency.format(economy.getConfig().getMaxBalance()))
                     : response.getReason();
             Messaging.send(sender, config.error.build(this.plugin, "response", reason));
+            return;
         }
 
         // notify players
