@@ -47,19 +47,26 @@ public final class PlaceholderAPIIntegration extends AlpineIntegration {
 
     private static final class Expansion extends PlaceholderExpansion implements Configurable {
 
+        private static final List<String> PLACEHOLDERS = Arrays.asList(
+                "%%bearconomy_balance%%",
+                "%%bearconomy_balance_fixed%%",
+                "%%bearconomy_balance_formatted%%",
+                "%%bearconomy_balance_commas%%"
+        );
+
         private static final DecimalFormat PRIMARY_FORMAT = new DecimalFormat("0.##");
 
         private static final DecimalFormat COMMAS_FORMAT = new DecimalFormat("#,###");
 
         private static final DecimalFormat FIXED_FORMAT = new DecimalFormat("#");
 
-        private final NavigableMap<Long, String> suffixes = new TreeMap<>();
+        private static final NavigableMap<Long, String> SUFFIXES = new TreeMap<>();
         {
-            this.suffixes.put(1_000L, this.getString("formatting.thousands", "K"));
-            this.suffixes.put(1_000_000L, this.getString("formatting.millions", "M"));
-            this.suffixes.put(1_000_000_000L, this.getString("formatting.billions", "B"));
-            this.suffixes.put(1_000_000_000_000L, this.getString("formatting.trillions", "T"));
-            this.suffixes.put(1_000_000_000_000_000L, this.getString("formatting.quadrillions", "Q"));
+            SUFFIXES.put(1_000L, this.getString("formatting.thousands", "K"));
+            SUFFIXES.put(1_000_000L, this.getString("formatting.millions", "M"));
+            SUFFIXES.put(1_000_000_000L, this.getString("formatting.billions", "B"));
+            SUFFIXES.put(1_000_000_000_000L, this.getString("formatting.trillions", "T"));
+            SUFFIXES.put(1_000_000_000_000_000L, this.getString("formatting.quadrillions", "Q"));
         }
 
         @Override
@@ -75,6 +82,16 @@ public final class PlaceholderAPIIntegration extends AlpineIntegration {
         @Override
         public @NotNull String getAuthor() {
             return "BestBearr";
+        }
+
+        @Override
+        public boolean persist() {
+            return true;
+        }
+
+        @Override
+        public @NotNull List<String> getPlaceholders() {
+            return PLACEHOLDERS;
         }
 
         @Override
@@ -154,7 +171,7 @@ public final class PlaceholderAPIIntegration extends AlpineIntegration {
                 return Long.toString(balance); //deal with easy case
             }
 
-            Map.Entry<Long, String> e = this.suffixes.floorEntry(balance);
+            Map.Entry<Long, String> e = SUFFIXES.floorEntry(balance);
             Long divideBy = e.getKey();
             String suffix = e.getValue();
 
