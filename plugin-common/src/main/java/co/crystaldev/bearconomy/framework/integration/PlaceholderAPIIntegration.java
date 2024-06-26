@@ -48,10 +48,10 @@ public final class PlaceholderAPIIntegration extends AlpineIntegration {
     private static final class Expansion extends PlaceholderExpansion implements Configurable {
 
         private static final List<String> PLACEHOLDERS = Arrays.asList(
-                "%%bearconomy_balance%%",
-                "%%bearconomy_balance_fixed%%",
-                "%%bearconomy_balance_formatted%%",
-                "%%bearconomy_balance_commas%%"
+                "%bearconomy_balance%",
+                "%bearconomy_balance_fixed%",
+                "%bearconomy_balance_formatted%",
+                "%bearconomy_balance_commas%"
         );
 
         private static final DecimalFormat PRIMARY_FORMAT = new DecimalFormat("0.##");
