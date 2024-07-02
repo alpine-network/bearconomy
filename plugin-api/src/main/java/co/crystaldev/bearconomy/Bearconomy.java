@@ -3,6 +3,7 @@ package co.crystaldev.bearconomy;
 import co.crystaldev.bearconomy.economy.Economy;
 import co.crystaldev.bearconomy.economy.EconomyConfig;
 import co.crystaldev.bearconomy.economy.currency.Currency;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,9 +21,8 @@ public interface Bearconomy {
      *
      * @return The Bearconomy instance.
      */
-    @NotNull
-    static Bearconomy get() {
-        return Reference.BEARCONOMY;
+    static @NotNull Bearconomy get() {
+        return (Bearconomy) Bukkit.getPluginManager().getPlugin("Bearconomy");
     }
 
     /**
@@ -56,8 +56,7 @@ public interface Bearconomy {
      *
      * @return The default Economy instance.
      */
-    @NotNull
-    default Economy getEconomy() {
+    default @NotNull Economy getEconomy() {
         return this.getEconomy(Economy.DEFAULT_ID)
                 .orElseThrow(() -> new IllegalStateException("no default currency registered"));
     }
@@ -76,8 +75,7 @@ public interface Bearconomy {
      * @param id The economy identifier.
      * @return The economy.
      */
-    @NotNull
-    Optional<Economy> getEconomy(@NotNull String id);
+    @NotNull Optional<Economy> getEconomy(@NotNull String id);
 
     /**
      * Retrieves an optional economy by its identifier.
@@ -85,8 +83,7 @@ public interface Bearconomy {
      * @param id The economy identifier.
      * @return The economy.
      */
-    @Nullable
-    default Economy fetchEconomy(@NotNull String id) {
+    default @Nullable Economy fetchEconomy(@NotNull String id) {
         return this.getEconomy(id).orElse(null);
     }
 
@@ -104,8 +101,7 @@ public interface Bearconomy {
      * @param currency The currency of the economy to retrieve.
      * @return The economy.
      */
-    @NotNull
-    Optional<Economy> getEconomy(@NotNull Currency currency);
+    @NotNull Optional<Economy> getEconomy(@NotNull Currency currency);
 
     /**
      * Retrieves an economy by its currency.
@@ -113,8 +109,7 @@ public interface Bearconomy {
      * @param currency The currency of the economy to retrieve.
      * @return The economy.
      */
-    @Nullable
-    default Economy fetchEconomy(@NotNull Currency currency) {
+    default @Nullable Economy fetchEconomy(@NotNull Currency currency) {
         return this.getEconomy(currency).orElse(null);
     }
 }

@@ -16,32 +16,28 @@ public interface Currency {
      *
      * @return The currency ID as a {@link String}.
      */
-    @NotNull
-    String getId();
+    @NotNull String getId();
 
     /**
      * Retrieves the singular name of the currency (e.g., "Dollar").
      *
      * @return The singular name as a {@link String}.
      */
-    @NotNull
-    String getSingularName();
+    @NotNull String getSingularName();
 
     /**
      * Retrieves the plural name of the currency (e.g., "Dollars").
      *
      * @return The plural name as a {@link String}.
      */
-    @NotNull
-    String getPluralName();
+    @NotNull String getPluralName();
 
     /**
      * Gets the symbol representing the currency (e.g., "$").
      *
      * @return The currency symbol as a {@link String}.
      */
-    @NotNull
-    String getSymbol();
+    @NotNull String getSymbol();
 
     /**
      * Formats a numerical amount into a string representation, including the currency symbol.
@@ -49,8 +45,7 @@ public interface Currency {
      * @param amount The amount to format.
      * @return The formatted amount as a {@link String}.
      */
-    @NotNull
-    String format(@NotNull BigDecimal amount);
+    @NotNull String format(@NotNull BigDecimal amount);
 
     /**
      * Formats a numerical amount into a string representation, including the currency symbol.
@@ -58,8 +53,7 @@ public interface Currency {
      * @param amount The amount to format.
      * @return The formatted amount as a {@link String}.
      */
-    @NotNull
-    default String format(double amount) {
+    default @NotNull String format(double amount) {
         return this.format(new BigDecimal(amount));
     }
 
@@ -70,8 +64,7 @@ public interface Currency {
      * @param amount The amount to format.
      * @return The amount followed by the singular or plural currency name, as applicable.
      */
-    @NotNull
-    String formatName(@NotNull BigDecimal amount);
+    @NotNull String formatName(@NotNull BigDecimal amount);
 
     /**
      * Formats the amount into a string representation using the appropriate singular or plural
@@ -80,8 +73,7 @@ public interface Currency {
      * @param amount The amount to format.
      * @return The amount followed by the singular or plural currency name, as applicable.
      */
-    @NotNull
-    default String formatName(double amount) {
+    default @NotNull String formatName(double amount) {
         return this.formatName(new BigDecimal(amount));
     }
 }

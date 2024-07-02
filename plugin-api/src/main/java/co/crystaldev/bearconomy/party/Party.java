@@ -20,29 +20,24 @@ public interface Party {
      *
      * @return The identifier of the party.
      */
-    @NotNull
-    UUID getId();
+    @NotNull UUID getId();
 
     /**
      * Retrieves the name of this party.
      *
      * @return The name of this party.
      */
-    @NotNull
-    String getName();
+    @NotNull String getName();
 
-    @NotNull
-    static Party player(@NotNull OfflinePlayer player) {
+    @NotNull static Party player(@NotNull OfflinePlayer player) {
         return new PlayerParty(player);
     }
 
-    @NotNull
-    static Party id(@NotNull UUID id) {
+    @NotNull static Party id(@NotNull UUID id) {
         return new GenericParty(id);
     }
 
-    @NotNull
-    static Stream<Party> allPlayers() {
+    static @NotNull Stream<Party> allPlayers() {
         return Bukkit.getOnlinePlayers().stream().map(Party::player);
     }
 }

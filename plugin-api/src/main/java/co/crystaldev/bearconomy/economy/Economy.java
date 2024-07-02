@@ -25,16 +25,14 @@ public interface Economy {
      *
      * @return The unique identifier.
      */
-    @NotNull
-    String getId();
+    @NotNull String getId();
 
     /**
      * Retrieves the configuration used by this economy.
      *
      * @return The current {@link EconomyConfig} instance.
      */
-    @NotNull
-    EconomyConfig getConfig();
+    @NotNull EconomyConfig getConfig();
 
     /**
      * Checks if the economy system is currently enabled.
@@ -48,8 +46,7 @@ public interface Economy {
      *
      * @return The current {@link Currency} instance.
      */
-    @NotNull
-    Currency getCurrency();
+    @NotNull Currency getCurrency();
 
     /**
      * Gets the current balance of a party.
@@ -57,8 +54,7 @@ public interface Economy {
      * @param party The party whose balance is being queried.
      * @return The balance as a {@link BigDecimal}.
      */
-    @NotNull
-    BigDecimal getBalance(@NotNull Party party);
+    @NotNull BigDecimal getBalance(@NotNull Party party);
 
     /**
      * Checks if a party has at least a certain balance.
@@ -90,8 +86,7 @@ public interface Economy {
      * @param force       Whether to force the transaction.
      * @return A {@link Response} indicating the outcome.
      */
-    @NotNull
-    Response deposit(@NotNull Party party, @NotNull Transaction transaction, boolean force);
+    @NotNull Response deposit(@NotNull Party party, @NotNull Transaction transaction, boolean force);
 
     /**
      * Deposits an amount to a party's balance.
@@ -100,8 +95,7 @@ public interface Economy {
      * @param transaction The transaction details.
      * @return A {@link Response} indicating the outcome.
      */
-    @NotNull
-    default Response deposit(@NotNull Party party, @NotNull Transaction transaction) {
+    default @NotNull Response deposit(@NotNull Party party, @NotNull Transaction transaction) {
         return this.deposit(party, transaction, false);
     }
 
@@ -113,8 +107,7 @@ public interface Economy {
      * @param force       Whether to force the transaction.
      * @return A {@link Response} indicating the outcome.
      */
-    @NotNull
-    Response withdraw(@NotNull Party party, @NotNull Transaction transaction, boolean force);
+    @NotNull Response withdraw(@NotNull Party party, @NotNull Transaction transaction, boolean force);
 
     /**
      * Withdraws an amount from a party's balance.
@@ -123,8 +116,7 @@ public interface Economy {
      * @param transaction The transaction details.
      * @return A {@link Response} indicating the outcome.
      */
-    @NotNull
-    default Response withdraw(@NotNull Party party, @NotNull Transaction transaction) {
+    default @NotNull Response withdraw(@NotNull Party party, @NotNull Transaction transaction) {
         return this.withdraw(party, transaction, false);
     }
 
@@ -136,8 +128,7 @@ public interface Economy {
      * @param force  Whether to force the transaction.
      * @return A {@link Response} indicating the outcome.
      */
-    @NotNull
-    default Response set(@NotNull Party party, @Nullable BigDecimal amount, boolean force) {
+    default @NotNull Response set(@NotNull Party party, @Nullable BigDecimal amount, boolean force) {
         if (amount == null) {
             amount = BigDecimal.ZERO;
         }
@@ -159,8 +150,7 @@ public interface Economy {
      * @param amount The new balance amount.
      * @return A {@link Response} indicating the outcome.
      */
-    @NotNull
-    default Response set(@NotNull Party party, @Nullable BigDecimal amount) {
+    default @NotNull Response set(@NotNull Party party, @Nullable BigDecimal amount) {
         return this.set(party, amount, false);
     }
 
@@ -171,8 +161,7 @@ public interface Economy {
      * @param amount The new balance amount.
      * @return A {@link Response} indicating the outcome.
      */
-    @NotNull
-    default Response set(@NotNull Party party, double amount) {
+    default @NotNull Response set(@NotNull Party party, double amount) {
         return this.set(party, new BigDecimal(amount));
     }
 

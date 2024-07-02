@@ -9,15 +9,13 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * @author BestBearr <crumbygames12@gmail.com>
- * @since 03/20/2024
+ * @since 0.1.0
  */
 public final class Leaderboard {
 
     private final Map<Economy, SortedEconomy> leaderboards = new HashMap<>();
 
-    @NotNull
-    public CompletableFuture<List<LeaderboardEntry>> getForEconomy(@NotNull Economy economy) {
+    public @NotNull CompletableFuture<List<LeaderboardEntry>> getForEconomy(@NotNull Economy economy) {
         return this.leaderboards.computeIfAbsent(economy, SortedEconomy::new).getSortedEntries();
     }
 }

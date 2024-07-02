@@ -70,8 +70,7 @@ public class Response {
      * @return The reason for the transaction result.
      * @see Reasons
      */
-    @NotNull
-    public String getReason() {
+    public @NotNull String getReason() {
         return this.result == Result.NOT_IMPLEMENTED ? Reasons.NOT_IMPLEMENTED : this.reason == null ? "" : this.reason;
     }
 

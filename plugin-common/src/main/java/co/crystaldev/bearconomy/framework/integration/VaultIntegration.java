@@ -21,8 +21,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 /**
- * @author BestBearr <crumbygames12@gmail.com>
- * @since 03/18/2024
+ * @since 0.1.0
  */
 public final class VaultIntegration extends AlpineIntegration {
     VaultIntegration(AlpinePlugin plugin) {

@@ -171,8 +171,7 @@ public final class MySQLStorage extends EconomyStorage {
         }
     }
 
-    @NotNull
-    private BigDecimal queryBalance(@NotNull Connection connection, @NotNull Party party) {
+    private @NotNull BigDecimal queryBalance(@NotNull Connection connection, @NotNull Party party) {
         BigDecimal balance = BigDecimal.ZERO;
 
         String tableName = "currency_" + this.currency.getId();
@@ -193,8 +192,7 @@ public final class MySQLStorage extends EconomyStorage {
         return balance;
     }
 
-    @NotNull
-    private BigDecimal queryBalance(@NotNull Party party) throws SQLException {
+    private @NotNull BigDecimal queryBalance(@NotNull Party party) throws SQLException {
         try (Connection connection = this.connection.getConnection()) {
             return this.queryBalance(connection, party);
         }

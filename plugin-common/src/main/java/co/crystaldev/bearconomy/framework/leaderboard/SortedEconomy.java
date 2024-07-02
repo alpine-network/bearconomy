@@ -16,8 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 /**
- * @author BestBearr <crumbygames12@gmail.com>
- * @since 03/20/2024
+ * @since 0.1.0
  */
 @RequiredArgsConstructor
 public final class SortedEconomy {
@@ -35,8 +34,7 @@ public final class SortedEconomy {
 
     private long lastUpdate;
 
-    @NotNull
-    public CompletableFuture<List<LeaderboardEntry>> getSortedEntries() {
+    public @NotNull CompletableFuture<List<LeaderboardEntry>> getSortedEntries() {
         // return the cached result
         if (System.currentTimeMillis() - this.lastUpdate < UPDATE_DURATION) {
             return CompletableFuture.completedFuture(this.entries);
@@ -65,6 +63,7 @@ public final class SortedEconomy {
                         this.entries.add(entry);
                     });
 
+            this.lastUpdate = System.currentTimeMillis();
             this.future.complete(this.entries);
         });
 

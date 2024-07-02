@@ -8,8 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
 
 /**
- * @author BestBearr <crumbygames12@gmail.com>
- * @since 03/18/2024
+ * @since 0.1.0
  */
 @AllArgsConstructor(access = AccessLevel.PROTECTED) @Getter
 public final class GenericParty implements Party {

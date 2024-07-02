@@ -24,14 +24,11 @@ public abstract class EconomyStorage {
 
     public abstract boolean isEnabled();
 
-    @NotNull
-    public abstract BigDecimal getBalance(@NotNull Party party);
+    public abstract @NotNull BigDecimal getBalance(@NotNull Party party);
 
-    @NotNull
-    public abstract Response deposit(@NotNull Party party, @NotNull Transaction transaction, boolean force);
+    public abstract @NotNull Response deposit(@NotNull Party party, @NotNull Transaction transaction, boolean force);
 
-    @NotNull
-    public abstract Response withdraw(@NotNull Party party, @NotNull Transaction transaction, boolean force);
+    public abstract @NotNull Response withdraw(@NotNull Party party, @NotNull Transaction transaction, boolean force);
 
     public void flush() {
         // NO OP

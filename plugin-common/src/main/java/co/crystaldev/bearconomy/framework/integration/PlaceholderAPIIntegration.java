@@ -19,8 +19,7 @@ import java.text.DecimalFormat;
 import java.util.*;
 
 /**
- * @author BestBearr <crumbygames12@gmail.com>
- * @since 4/7/2024
+ * @since 0.1.0
  * @see <a href="https://github.com/PlaceholderAPI/Vault-Expansion/blob/master/src/main/java/at/helpch/placeholderapi/expansion/vault/EconomyHook.java">PAPI Vault Expansion</a>
  */
 public final class PlaceholderAPIIntegration extends AlpineIntegration {

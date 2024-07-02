@@ -40,8 +40,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * @author BestBearr <crumbygames12@gmail.com>
- * @since 03/18/2024
+ * @since 0.1.0
  */
 @Command(name = "bearconomy")
 @Description("Main command for Bearconomy.")

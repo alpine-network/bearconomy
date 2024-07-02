@@ -6,8 +6,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 /**
- * @author BestBearr <crumbygames12@gmail.com>
- * @since 03/20/2024
+ * @since 0.1.0
  */
 @Data
 public final class LeaderboardEntry {
