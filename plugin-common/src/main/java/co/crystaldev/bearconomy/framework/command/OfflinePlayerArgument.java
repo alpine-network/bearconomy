@@ -1,7 +1,7 @@
 package co.crystaldev.bearconomy.framework.command;
 
-import co.crystaldev.alpinecore.config.AlpineCoreConfig;
 import co.crystaldev.alpinecore.framework.command.AlpineArgumentResolver;
+import co.crystaldev.alpinecore.framework.config.AlpinePluginConfig;
 import co.crystaldev.bearconomy.framework.BearconomyPlugin;
 import dev.rollczi.litecommands.argument.Argument;
 import dev.rollczi.litecommands.argument.parser.ParseResult;
@@ -29,7 +29,7 @@ public final class OfflinePlayerArgument extends AlpineArgumentResolver<OfflineP
         }
 
         BearconomyPlugin plugin = BearconomyPlugin.getInstance();
-        AlpineCoreConfig config = plugin.getConfiguration(AlpineCoreConfig.class);
+        AlpinePluginConfig config = plugin.getAlpineConfig();
         return ParseResult.failure(config.playerNotFound.buildString(plugin, "player", argument));
     }
 

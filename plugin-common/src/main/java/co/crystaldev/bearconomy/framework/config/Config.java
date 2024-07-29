@@ -117,6 +117,9 @@ public final class Config extends AlpineConfig {
     public ConfigMessage insufficientBalanceSelf = ConfigMessage.of(
             "You not have sufficient funds");
 
+    public ConfigMessage invalidTransactionAmount = ConfigMessage.of(
+            "The transaction amount must be a positive number");
+
     public enum StorageType {
         // TODO: More storage types for managed economies
         JSON,

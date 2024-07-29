@@ -204,6 +204,12 @@ public final class BearconomyCommand extends AlpineCommand {
             return;
         }
 
+        if (amount.equals(BigDecimal.ZERO) || amount.compareTo(BigDecimal.ZERO) < 0) {
+            Messaging.send(sender, config.error.build(this.plugin, "response",
+                    config.invalidTransactionAmount.build(this.plugin)));
+            return;
+        }
+
         // withdraw the money from the sender's account
         Response response = economy.withdraw(senderParty, Transaction.of(amount, "sending money:pay:" + player.getName()));
         if (response.failed()) {
