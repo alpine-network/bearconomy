@@ -42,7 +42,7 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * @since 0.1.0
  */
-@Command(name = "bearconomy")
+@Command(name = "bearconomy", aliases = {"eco", "economy" })
 @Description("Main command for Bearconomy.")
 public final class BearconomyCommand extends AlpineCommand {
 
@@ -52,7 +52,7 @@ public final class BearconomyCommand extends AlpineCommand {
         super(plugin);
     }
 
-    @Execute(name = "deposit")
+    @Execute(name = "deposit", aliases = "give")
     @Permission("bearconomy.admin.deposit")
     @Description("Deposit into a player's balance.")
     public void deposit(
@@ -88,7 +88,7 @@ public final class BearconomyCommand extends AlpineCommand {
         }
     }
 
-    @Execute(name = "withdraw")
+    @Execute(name = "withdraw", aliases = "take")
     @Permission("bearconomy.admin.withdraw")
     @Description("Withdraw from a player's balance.")
     public void withdraw(
@@ -158,7 +158,7 @@ public final class BearconomyCommand extends AlpineCommand {
 
     @Execute(name = "bal")
     @Shortcut({ "balance", "bal" })
-    @Permission("bearconomy.balance")
+    @Permission("bearconomy.command.balance")
     @Description("Display a player's balance.")
     public void show(
             @Context CommandSender sender,
@@ -185,7 +185,7 @@ public final class BearconomyCommand extends AlpineCommand {
 
     @Execute(name = "pay")
     @Shortcut("pay")
-    @Permission("bearconomy.pay")
+    @Permission("bearconomy.command.pay")
     @Description("Send money to another player.")
     public void pay(
             @Context Player sender,
@@ -245,7 +245,7 @@ public final class BearconomyCommand extends AlpineCommand {
 
     @Execute(name = "balancetop")
     @Shortcut({ "balancetop", "baltop" })
-    @Permission("bearconomy.balancetop")
+    @Permission("bearconomy.command.balancetop")
     @Description("Display the balance leaderboard.")
     public void balanceTop(
             @Context CommandSender sender,
@@ -287,7 +287,7 @@ public final class BearconomyCommand extends AlpineCommand {
 
         AtomicReference<BigDecimal> total = new AtomicReference<>(BigDecimal.ZERO);
 
-        String command = "/bearconomy balancetop %page%";
+        String command = "/balancetop %page%";
         Component title = config.balanceTopTitle.build(this.plugin, "type", currency.getSingularName());
         Component compiledPage = Formatting.page(this.plugin, title, entries, command, page, 10, entry -> {
             total.set(total.get().add(entry.getBalance()));
