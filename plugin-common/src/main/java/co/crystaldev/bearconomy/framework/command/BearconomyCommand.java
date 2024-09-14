@@ -286,12 +286,11 @@ public final class BearconomyCommand extends AlpineCommand {
         }
 
         AtomicReference<BigDecimal> total = new AtomicReference<>(BigDecimal.ZERO);
+        entries.forEach(entry -> total.updateAndGet(a -> a.add(entry.getBalance())));
 
         String command = "/balancetop %page%";
         Component title = config.balanceTopTitle.build(this.plugin, "type", currency.getSingularName());
         Component compiledPage = Formatting.page(this.plugin, title, entries, command, page, 10, entry -> {
-            total.set(total.get().add(entry.getBalance()));
-
             return config.balanceTopEntry.build(this.plugin,
                     "position", entry.getPosition(),
                     "player", entry.getParty().getName(),
