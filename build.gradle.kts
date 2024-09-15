@@ -33,7 +33,7 @@ allprojects {
 
     configurations.create("shaded")
     dependencies {
-        compileOnly(group = "io.papermc", name = "paper-api", version = project.property("paper_version") as String)
+        compileOnly(group = "org.spigotmc", name = "spigot-api", version = project.property("server_version") as String)
         compileOnly(group = "co.crystaldev", name = "alpinecore", version = "0.4.3")
 
         compileOnly(group = "me.clip", name = "placeholderapi", version = "2.11.5")
