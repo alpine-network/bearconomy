@@ -35,9 +35,13 @@ public final class SortedEconomy {
     private long lastUpdate;
 
     public @NotNull CompletableFuture<List<LeaderboardEntry>> getSortedEntries() {
-        // return the cached result
         if (System.currentTimeMillis() - this.lastUpdate < UPDATE_DURATION) {
+            // return the cached result
             return CompletableFuture.completedFuture(this.entries);
+        }
+        else if (this.future != null && System.currentTimeMillis() - this.lastUpdate > UPDATE_DURATION) {
+            // reset the future and resort
+            this.future = null;
         }
 
         // if sorting, wait for that to conclude

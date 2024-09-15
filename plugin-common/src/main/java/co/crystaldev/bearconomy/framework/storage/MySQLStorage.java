@@ -9,7 +9,9 @@ import co.crystaldev.bearconomy.economy.Response;
 import co.crystaldev.bearconomy.economy.Result;
 import co.crystaldev.bearconomy.economy.currency.Currency;
 import co.crystaldev.bearconomy.economy.transaction.Transaction;
+import co.crystaldev.bearconomy.framework.BearconomyPlugin;
 import co.crystaldev.bearconomy.framework.DatabaseHandler;
+import co.crystaldev.bearconomy.framework.config.Config;
 import co.crystaldev.bearconomy.party.Party;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -182,7 +184,15 @@ public final class MySQLStorage extends EconomyStorage {
 
             ResultSet resultSet = statement.getResultSet();
             if (resultSet.next()) {
+                // Balance saved
                 balance = resultSet.getBigDecimal("balance");
+            }
+            else {
+                // Set to the default balance
+                BearconomyPlugin plugin = BearconomyPlugin.getInstance();
+                Config config = plugin.getConfiguration(Config.class);
+                balance = config.defaultBalance;
+                this.updateBalance(connection, party, balance);
             }
         }
         catch (SQLException ex) {

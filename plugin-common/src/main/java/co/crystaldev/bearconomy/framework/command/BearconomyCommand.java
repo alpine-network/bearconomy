@@ -64,17 +64,18 @@ public final class BearconomyCommand extends AlpineCommand {
         Economy economy = Bearconomy.get().getEconomy();
         Currency currency = economy.getCurrency();
         Party party = Party.player(player);
+        Player senderPlayer = sender instanceof Player ? (Player) sender : null;
 
         Response response = economy.deposit(party, Transaction.of(amount, "admin deposit"));
         if (response.succeeded()) {
             if (isDifferentPlayer(sender, player)) {
-                Messaging.send(sender, config.deposit.build(this.plugin,
+                Messaging.send(sender, config.deposit.build(this.plugin, player, senderPlayer,
                         "player", player.getName(),
                         "amount", currency.format(amount),
                         "balance", currency.format(economy.getBalance(party))));
             }
 
-            Messaging.attemptSend(player, config.deposited.build(this.plugin,
+            Messaging.attemptSend(player, config.deposited.build(this.plugin, player, senderPlayer,
                     "player", sender.getName(),
                     "amount", currency.format(amount),
                     "balance", currency.format(economy.getBalance(party))));
@@ -82,9 +83,11 @@ public final class BearconomyCommand extends AlpineCommand {
         else if (response.failed()) {
             ConfigMessage errorMessage = isDifferentPlayer(sender, player) ? config.oversizeBalanceOther : config.oversizeBalanceSelf;
             Object reason = Reasons.OVERSIZE_BALANCE.equals(response.getReason()) && economy.getConfig().hasMaxBalance()
-                    ? errorMessage.build(this.plugin, "player", player.getName(), "limit", currency.format(economy.getConfig().getMaxBalance()))
+                    ? errorMessage.build(this.plugin, player, senderPlayer,
+                        "player", player.getName(),
+                        "limit", currency.format(economy.getConfig().getMaxBalance()))
                     : response.getReason();
-            Messaging.send(sender, config.error.build(this.plugin, "response", reason));
+            Messaging.send(sender, config.error.build(this.plugin,  player, senderPlayer, "response", reason));
         }
     }
 
@@ -100,17 +103,18 @@ public final class BearconomyCommand extends AlpineCommand {
         Economy economy = Bearconomy.get().getEconomy();
         Currency currency = economy.getCurrency();
         Party party = Party.player(player);
+        Player senderPlayer = sender instanceof Player ? (Player) sender : null;
 
         Response response = economy.withdraw(party, Transaction.of(amount, "admin withdraw"));
         if (response.succeeded()) {
             if (isDifferentPlayer(sender, player)) {
-                Messaging.send(sender, config.withdraw.build(this.plugin,
+                Messaging.send(sender, config.withdraw.build(this.plugin, player, senderPlayer,
                         "player", player.getName(),
                         "amount", currency.format(amount),
                         "balance", currency.format(economy.getBalance(party))));
             }
 
-            Messaging.attemptSend(player, config.withdrew.build(this.plugin,
+            Messaging.attemptSend(player, config.withdrew.build(this.plugin, player, senderPlayer,
                     "player", sender.getName(),
                     "amount", currency.format(amount),
                     "balance", currency.format(economy.getBalance(party))));
@@ -118,9 +122,10 @@ public final class BearconomyCommand extends AlpineCommand {
         else if (response.failed()) {
             ConfigMessage errorMessage = isDifferentPlayer(sender, player) ? config.insufficientBalanceOther : config.insufficientBalanceSelf;
             Object reason = Reasons.INSUFFICIENT_BALANCE.equals(response.getReason())
-                    ? errorMessage.build(this.plugin, "player", player.getName())
+                    ? errorMessage.build(this.plugin,  player, senderPlayer,
+                        "player", player.getName())
                     : response.getReason();
-            Messaging.send(sender, config.error.build(this.plugin, "response", reason));
+            Messaging.send(sender, config.error.build(this.plugin, player, senderPlayer, "response", reason));
         }
     }
 
@@ -136,23 +141,25 @@ public final class BearconomyCommand extends AlpineCommand {
         Economy economy = Bearconomy.get().getEconomy();
         Currency currency = economy.getCurrency();
         Party party = Party.player(player);
+        Player senderPlayer = sender instanceof Player ? (Player) sender : null;
 
         Response response = economy.set(party, balance);
         if (response.succeeded()) {
             String formattedBalance = currency.format(balance);
 
             if (isDifferentPlayer(sender, player)) {
-                Messaging.send(sender, config.balanceUpdatedOther.build(this.plugin,
+                Messaging.send(sender, config.balanceUpdatedOther.build(this.plugin, player, senderPlayer,
                         "player", player.getName(),
                         "amount", formattedBalance));
             }
 
-            Messaging.attemptSend(player, config.balanceUpdatedSelf.build(this.plugin,
+            Messaging.attemptSend(player, config.balanceUpdatedSelf.build(this.plugin, player, senderPlayer,
                     "player", sender.getName(),
                     "amount", formattedBalance));
         }
         else if (response.failed()) {
-            Messaging.send(sender, config.error.build(this.plugin, "response", response.getReason()));
+            Messaging.send(sender, config.error.build(this.plugin, player, senderPlayer,
+                    "response", response.getReason()));
         }
     }
 
@@ -176,9 +183,10 @@ public final class BearconomyCommand extends AlpineCommand {
         Party party = Party.player(player);
         BigDecimal balance = economy.getBalance(party);
         String formattedBalance = economy.getCurrency().format(balance);
+        Player senderPlayer = sender instanceof Player ? (Player) sender : null;
 
         ConfigMessage message = isDifferentPlayer(sender, player) ? config.balanceOther : config.balanceSelf;
-        Messaging.send(sender, message.build(this.plugin,
+        Messaging.send(sender, message.build(this.plugin, player, senderPlayer,
                 "player", player.getName(),
                 "amount", formattedBalance));
     }
@@ -200,13 +208,13 @@ public final class BearconomyCommand extends AlpineCommand {
 
         // do not allow the player to pay themselves
         if (!isDifferentPlayer(sender, player)) {
-            Messaging.send(sender, config.paySelf.build(this.plugin));
+            Messaging.send(sender, config.paySelf.build(this.plugin, player, sender));
             return;
         }
 
         if (amount.equals(BigDecimal.ZERO) || amount.compareTo(BigDecimal.ZERO) < 0) {
-            Messaging.send(sender, config.error.build(this.plugin, "response",
-                    config.invalidTransactionAmount.build(this.plugin)));
+            Messaging.send(sender, config.error.build(this.plugin, player, sender,
+                    "response", config.invalidTransactionAmount.build(this.plugin)));
             return;
         }
 
@@ -214,9 +222,9 @@ public final class BearconomyCommand extends AlpineCommand {
         Response response = economy.withdraw(senderParty, Transaction.of(amount, "sending money:pay:" + player.getName()));
         if (response.failed()) {
             Object reason = Reasons.INSUFFICIENT_BALANCE.equals(response.getReason())
-                    ? config.insufficientBalanceSelf.build(this.plugin, "player", sender.getName())
+                    ? config.insufficientBalanceSelf.build(this.plugin, player, sender, "player", sender.getName())
                     : response.getReason();
-            Messaging.send(sender, config.error.build(this.plugin, "response", reason));
+            Messaging.send(sender, config.error.build(this.plugin, player, sender, "response", reason));
             return;
         }
 
@@ -227,18 +235,21 @@ public final class BearconomyCommand extends AlpineCommand {
             economy.deposit(senderParty, Transaction.of(amount, "rolling back:pay:" + player.getName()));
 
             Object reason = Reasons.OVERSIZE_BALANCE.equals(response.getReason()) && economy.getConfig().hasMaxBalance()
-                    ? config.oversizeBalanceOther.build(this.plugin, "player", player.getName(), "limit", currency.format(economy.getConfig().getMaxBalance()))
+                    ? config.oversizeBalanceOther.build(this.plugin,  player, sender,
+                        "player", player.getName(),
+                        "limit", currency.format(economy.getConfig().getMaxBalance()))
                     : response.getReason();
-            Messaging.send(sender, config.error.build(this.plugin, "response", reason));
+            Messaging.send(sender, config.error.build(this.plugin, player, sender,
+                    "response", reason));
             return;
         }
 
         // notify players
-        Messaging.send(sender, config.paymentSent.build(this.plugin,
+        Messaging.send(sender, config.paymentSent.build(this.plugin, player, sender,
                 "amount", currency.format(amount),
                 "player", player.getName()));
 
-        Messaging.attemptSend(player, config.paymentReceived.build(this.plugin,
+        Messaging.attemptSend(player, config.paymentReceived.build(this.plugin, player, sender,
                 "amount", currency.format(amount),
                 "player", sender.getName()));
     }
@@ -251,6 +262,7 @@ public final class BearconomyCommand extends AlpineCommand {
             @Context CommandSender sender,
             @Arg("page") Optional<Integer> pageNumber
     ) {
+        Player senderPlayer = sender instanceof Player ? (Player) sender : null;
         Config config = Config.getInstance();
         int page = pageNumber.orElse(1);
         Economy economy = Bearconomy.get().getEconomy();
@@ -261,12 +273,14 @@ public final class BearconomyCommand extends AlpineCommand {
             this.dispatchBalanceTop(sender, currency, page, config, leaderboard.getNow(null));
         }
         else if (leaderboard.isCompletedExceptionally()) {
-            Messaging.send(sender, config.error.build(this.plugin, "An unexpected error has occurred"));
+            Messaging.send(sender, config.error.build(this.plugin, senderPlayer,
+                    "response", "An unexpected error has occurred"));
         }
         else {
             leaderboard.whenComplete((board, ex) -> {
                 if (ex != null) {
-                    Messaging.send(sender, config.error.build(this.plugin, "An unexpected error has occurred"));
+                    Messaging.send(sender, config.error.build(this.plugin, senderPlayer,
+                            "response", "An unexpected error has occurred"));
                     ex.printStackTrace();
                 }
                 else {
@@ -275,7 +289,8 @@ public final class BearconomyCommand extends AlpineCommand {
             });
 
             int length = Bukkit.getOfflinePlayers().length;
-            Messaging.send(sender, config.sortingBalances.build(this.plugin, "amount", length));
+            Messaging.send(sender, config.sortingBalances.build(this.plugin, senderPlayer,
+                    "amount", length));
         }
     }
 
@@ -285,13 +300,16 @@ public final class BearconomyCommand extends AlpineCommand {
             return;
         }
 
+        Player senderPlayer = sender instanceof Player ? (Player) sender : null;
+
         AtomicReference<BigDecimal> total = new AtomicReference<>(BigDecimal.ZERO);
         entries.forEach(entry -> total.updateAndGet(a -> a.add(entry.getBalance())));
 
         String command = "/balancetop %page%";
-        Component title = config.balanceTopTitle.build(this.plugin, "type", currency.getSingularName());
+        Component title = config.balanceTopTitle.build(this.plugin, senderPlayer, "type", currency.getSingularName());
+        ConfigMessage balanceTopEntry = config.currencyBalanceTopEntries.getOrDefault(currency.getId(), config.balanceTopEntry);
         Component compiledPage = Formatting.page(this.plugin, title, entries, command, page, 10, entry -> {
-            return config.balanceTopEntry.build(this.plugin,
+            return balanceTopEntry.build(this.plugin, Bukkit.getPlayer(entry.getParty().getId()), senderPlayer,
                     "position", entry.getPosition(),
                     "player", entry.getParty().getName(),
                     "amount", currency.format(entry.getBalance()));
@@ -299,7 +317,7 @@ public final class BearconomyCommand extends AlpineCommand {
 
         Messaging.send(sender, Components.joinNewLines(
                 compiledPage,
-                config.serverTotal.build(this.plugin, "amount", currency.format(total.get()))
+                config.serverTotal.build(this.plugin, senderPlayer, "amount", currency.format(total.get()))
         ));
     }
 

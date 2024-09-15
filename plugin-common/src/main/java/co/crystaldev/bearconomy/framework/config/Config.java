@@ -6,6 +6,8 @@ import de.exlll.configlib.Comment;
 import lombok.Getter;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @since 0.1.0
@@ -46,6 +48,8 @@ public final class Config extends AlpineConfig {
     public boolean enforceMaxBalance = true;
 
     public BigDecimal balanceCapacity = new BigDecimal(25_000_000);
+
+    public BigDecimal defaultBalance = new BigDecimal(0);
 
     @Comment({
             "",
@@ -100,6 +104,8 @@ public final class Config extends AlpineConfig {
 
     public ConfigMessage balanceTopEntry = ConfigMessage.of(
             "<highlight>#%position%</highlight> %player%: <emphasis>%amount%</emphasis>");
+
+    public Map<String, ConfigMessage> currencyBalanceTopEntries = new HashMap<>();
 
     @Comment({
             "",

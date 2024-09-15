@@ -11,6 +11,7 @@ import co.crystaldev.bearconomy.economy.Result;
 import co.crystaldev.bearconomy.economy.currency.Currency;
 import co.crystaldev.bearconomy.economy.transaction.Transaction;
 import co.crystaldev.bearconomy.framework.BearconomyPlugin;
+import co.crystaldev.bearconomy.framework.config.Config;
 import co.crystaldev.bearconomy.party.Party;
 import org.jetbrains.annotations.NotNull;
 
@@ -41,7 +42,14 @@ public final class GsonStorage extends EconomyStorage {
     @Override
     public @NotNull BigDecimal getBalance(@NotNull Party party) {
         if (!this.store.has(party.getId())) {
-            return BigDecimal.ZERO;
+
+            // Set to the default balance
+            BearconomyPlugin plugin = BearconomyPlugin.getInstance();
+            Config config = plugin.getConfiguration(Config.class);
+            this.store.put(party.getId(), config.defaultBalance);
+
+            // Return the default balance
+            return config.defaultBalance;
         }
 
         return this.store.get(party.getId());
