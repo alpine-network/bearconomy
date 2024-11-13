@@ -33,9 +33,9 @@ public final class PlayerParty implements Party, ExperienceHolder {
     }
 
     @Override
-    public void setExperience(int level) {
+    public void setExperience(int exp) {
         if (this.player.isOnline()) {
-            this.player.getPlayer().setLevel(level);
+            ExpUtils.changeExp(this.player.getPlayer(), exp);
         }
     }
 }
