@@ -4,6 +4,7 @@ import co.crystaldev.alpinecore.util.ExpUtils;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -34,8 +35,18 @@ public final class PlayerParty implements Party, ExperienceHolder {
 
     @Override
     public void setExperience(int exp) {
-        if (this.player.isOnline()) {
-            ExpUtils.changeExp(this.player.getPlayer(), exp);
+        if (!this.player.isOnline()) {
+            return;
         }
+
+        if (exp < 0) {
+            exp = 0;
+        }
+
+        Player player = this.player.getPlayer();
+        double levelAndExp = ExpUtils.getLevelFromExp(exp);
+        int level = (int) levelAndExp;
+        player.setLevel(level);
+        player.setExp((float)(levelAndExp - (double)level));
     }
 }
