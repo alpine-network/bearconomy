@@ -75,7 +75,7 @@ public final class ExperienceEconomy implements Economy {
         BigDecimal newBalance = balance.subtract(transaction.getAmount());
 
         // Ensure party has enough balance
-        if (!force && BigDecimal.ZERO.compareTo(newBalance) <= 0) {
+        if (!force && newBalance.compareTo(BigDecimal.ZERO) <= 0) {
             return new Response(party, transaction, balance, balance,
                     Reasons.INSUFFICIENT_BALANCE, Result.FAILURE);
         }
