@@ -6,6 +6,8 @@ import co.crystaldev.bearconomy.economy.Economy;
 import co.crystaldev.bearconomy.economy.EconomyConfig;
 import co.crystaldev.bearconomy.economy.currency.Currency;
 import co.crystaldev.bearconomy.framework.config.Config;
+import co.crystaldev.bearconomy.framework.economy.ExperienceEconomy;
+import co.crystaldev.bearconomy.framework.economy.ManagedEconomy;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
@@ -35,6 +37,8 @@ public final class BearconomyPlugin extends AlpinePlugin implements Bearconomy {
     @Override
     public void onStart() {
         this.registerEconomy(Economy.DEFAULT_ID, Economy.DEFAULT_CURRENCY);
+        this.registerEconomy(new ExperienceEconomy());
+
         this.taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
             for (Economy economy : this.idToEconomy.values()) {
                 economy.flush();

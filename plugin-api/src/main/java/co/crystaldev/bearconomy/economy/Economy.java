@@ -20,6 +20,8 @@ public interface Economy {
 
     String DEFAULT_ID = "default";
 
+    String EXPERIENCE_ID = "experience";
+
     /**
      * Returns the unique identifier for this economy.
      *

@@ -62,6 +62,16 @@ public interface Bearconomy {
     }
 
     /**
+     * Retrieves the experience economy.
+     *
+     * @return The default experience Economy instance.
+     */
+    default @NotNull Economy getExperienceEconomy() {
+        return this.getEconomy(Economy.EXPERIENCE_ID)
+                .orElseThrow(() -> new IllegalStateException("no experience currency registered"));
+    }
+
+    /**
      * Checks if an economy with the specified identifier exists.
      *
      * @param id The economy identifier.

@@ -1,4 +1,4 @@
-package co.crystaldev.bearconomy.framework;
+package co.crystaldev.bearconomy.framework.economy;
 
 import co.crystaldev.bearconomy.economy.Economy;
 import co.crystaldev.bearconomy.economy.EconomyConfig;
@@ -31,7 +31,7 @@ public final class ManagedEconomy implements Economy {
 
     private final EconomyStorage storage;
 
-    ManagedEconomy(@NotNull String id, @NotNull Currency currency, @Nullable EconomyConfig economyConfig) {
+    public ManagedEconomy(@NotNull String id, @NotNull Currency currency, @Nullable EconomyConfig economyConfig) {
         this.id = id;
         this.currency = currency;
         this.config = economyConfig == null ? new EconomyConfig(null) : economyConfig;

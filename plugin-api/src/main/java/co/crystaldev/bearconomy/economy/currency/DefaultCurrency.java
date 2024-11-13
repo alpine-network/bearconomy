@@ -10,7 +10,7 @@ import java.text.DecimalFormat;
  */
 public class DefaultCurrency implements Currency {
 
-    private final DecimalFormat decimalFormat = new DecimalFormat("#,###.##");
+    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#,###.##");
 
     @Override
     public @NotNull String getId() {
@@ -34,12 +34,12 @@ public class DefaultCurrency implements Currency {
 
     @Override
     public @NotNull String format(@NotNull BigDecimal amount) {
-        return this.getSymbol() + this.decimalFormat.format(amount);
+        return this.getSymbol() + DECIMAL_FORMAT.format(amount);
     }
 
     @Override
     public @NotNull String formatName(@NotNull BigDecimal amount) {
         String name = BigDecimal.ONE.equals(amount) ? this.getSingularName() : this.getPluralName();
-        return this.decimalFormat.format(amount) + " " + name;
+        return DECIMAL_FORMAT.format(amount) + " " + name;
     }
 }
