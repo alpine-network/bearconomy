@@ -102,12 +102,12 @@ public final class ExperienceEconomy implements Economy {
 
         @Override
         public @NotNull String getSingularName() {
-            return "levels";
+            return "exp points";
         }
 
         @Override
         public @NotNull String getPluralName() {
-            return "level";
+            return "exp point";
         }
 
         @Override
@@ -117,7 +117,7 @@ public final class ExperienceEconomy implements Economy {
 
         @Override
         public @NotNull String format(@NotNull BigDecimal amount) {
-            return this.getSymbol() + DECIMAL_FORMAT.format(amount);
+            return DECIMAL_FORMAT.format(amount) + " EXP";
         }
 
         @Override
