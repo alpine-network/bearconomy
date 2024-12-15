@@ -25,18 +25,18 @@ allprojects {
         mavenCentral()
         maven("https://repo.codemc.org/repository/nms/")
         maven("https://lib.alpn.cloud/alpine-public/")
+        maven("https://lib.alpn.cloud/snapshots/")
         maven("https://repo.papermc.io/repository/maven-public/")
         maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
-        maven("https://repo.panda-lang.org/releases")
         maven("https://jitpack.io")
     }
 
     configurations.create("shaded")
     dependencies {
         compileOnly(group = "org.spigotmc", name = "spigot-api", version = project.property("server_version") as String)
-        compileOnly(group = "co.crystaldev", name = "alpinecore", version = "0.4.3")
+        compileOnly(group = "co.crystaldev", name = "alpinecore", version = "0.4.10-SNAPSHOT")
 
-        compileOnly(group = "me.clip", name = "placeholderapi", version = "2.11.5")
+        compileOnly(group = "me.clip", name = "placeholderapi", version = "2.11.6")
         compileOnly(group = "com.github.MilkBowl", name = "VaultAPI", version = "1.7")
 
         compileOnly(group = "org.projectlombok", name = "lombok", version = "1.18.30")
