@@ -163,6 +163,18 @@ public final class BearconomyCommand extends AlpineCommand {
         }
     }
 
+    @Execute(name = "reset")
+    @Permission("bearconomy.admin.reset")
+    @Description("Reset a player's balance to default.")
+    public void reset(
+            @Context CommandSender sender,
+            @Arg("player") @Key("offlinePlayer") OfflinePlayer player
+    ) {
+        Config config = Config.getInstance();
+
+        set(sender, player, config.defaultBalance);
+    }
+
     @Execute(name = "bal")
     @Shortcut({ "balance", "bal" })
     @Permission("bearconomy.command.balance")
