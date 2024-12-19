@@ -81,6 +81,9 @@ public final class Config extends AlpineConfig {
     public ConfigMessage paySelf = ConfigMessage.of(
             "%error_prefix% You are unable to send money to yourself");
 
+    public ConfigMessage hasNotPlayedBefore = ConfigMessage.of(
+            "%error_prefix% %player_name% has not joined before");
+
     public ConfigMessage balanceUpdatedOther = ConfigMessage.of(
             "%prefix% Balance for <highlight>%player%</highlight> was set to <highlight>%amount%</highlight>");
 

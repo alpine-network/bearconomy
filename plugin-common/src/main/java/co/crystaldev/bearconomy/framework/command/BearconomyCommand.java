@@ -17,7 +17,7 @@ import co.crystaldev.bearconomy.framework.config.Config;
 import co.crystaldev.bearconomy.framework.leaderboard.LeaderboardEntry;
 import co.crystaldev.bearconomy.party.Party;
 import dev.rollczi.litecommands.annotations.argument.Arg;
-import dev.rollczi.litecommands.annotations.argument.Key;
+import dev.rollczi.litecommands.annotations.async.Async;
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.annotations.context.Context;
 import dev.rollczi.litecommands.annotations.description.Description;
@@ -57,7 +57,7 @@ public final class BearconomyCommand extends AlpineCommand {
     @Description("Deposit into a player's balance.")
     public void deposit(
             @Context CommandSender sender,
-            @Arg("player") @Key("offlinePlayer") OfflinePlayer player,
+            @Arg("player") @Async OfflinePlayer player,
             @Arg("amount") BigDecimal amount
     ) {
         Config config = Config.getInstance();
@@ -96,7 +96,7 @@ public final class BearconomyCommand extends AlpineCommand {
     @Description("Withdraw from a player's balance.")
     public void withdraw(
             @Context CommandSender sender,
-            @Arg("player") @Key("offlinePlayer") OfflinePlayer player,
+            @Arg("player") @Async OfflinePlayer player,
             @Arg("amount") BigDecimal amount
     ) {
         Config config = Config.getInstance();
@@ -134,7 +134,7 @@ public final class BearconomyCommand extends AlpineCommand {
     @Description("Set a player's balance.")
     public void set(
             @Context CommandSender sender,
-            @Arg("player") @Key("offlinePlayer") OfflinePlayer player,
+            @Arg("player") @Async OfflinePlayer player,
             @Arg("amount") BigDecimal balance
     ) {
         Config config = Config.getInstance();
@@ -168,7 +168,7 @@ public final class BearconomyCommand extends AlpineCommand {
     @Description("Reset a player's balance to default.")
     public void reset(
             @Context CommandSender sender,
-            @Arg("player") @Key("offlinePlayer") OfflinePlayer player
+            @Arg("player") @Async OfflinePlayer player
     ) {
         Config config = Config.getInstance();
 
@@ -181,7 +181,7 @@ public final class BearconomyCommand extends AlpineCommand {
     @Description("Display a player's balance.")
     public void show(
             @Context CommandSender sender,
-            @OptionalArg("player") @Key("offlinePlayer") OfflinePlayer player
+            @OptionalArg("player") @Async OfflinePlayer player
     ) {
         if (player == null) {
             player = sender instanceof Player ? (OfflinePlayer) sender : null;
@@ -190,7 +190,13 @@ public final class BearconomyCommand extends AlpineCommand {
             }
         }
 
+        // ensure player has joined the server
         Config config = Config.getInstance();
+        if (!player.isOnline() && !player.hasPlayedBefore()) {
+            Messaging.send(sender, config.hasNotPlayedBefore.build(this.plugin, player));
+            return;
+        }
+
         Economy economy = Bearconomy.get().getEconomy();
         Party party = Party.player(player);
         BigDecimal balance = economy.getBalance(party);
@@ -209,14 +215,15 @@ public final class BearconomyCommand extends AlpineCommand {
     @Description("Send money to another player.")
     public void pay(
             @Context Player sender,
-            @Arg("player") @Key("offlinePlayer") OfflinePlayer player,
+            @Arg("player") @Async OfflinePlayer player,
             @Arg("amount") BigDecimal amount
     ) {
+        // ensure player has joined the server
         Config config = Config.getInstance();
-        Economy economy = Bearconomy.get().getEconomy();
-        Currency currency = economy.getCurrency();
-        Party senderParty = Party.player(sender);
-        Party targetParty = Party.player(player);
+        if (!player.isOnline() && !player.hasPlayedBefore()) {
+            Messaging.send(sender, config.hasNotPlayedBefore.build(this.plugin, player));
+            return;
+        }
 
         // do not allow the player to pay themselves
         if (!isDifferentPlayer(sender, player)) {
@@ -229,6 +236,11 @@ public final class BearconomyCommand extends AlpineCommand {
                     "response", config.invalidTransactionAmount.build(this.plugin)));
             return;
         }
+
+        Economy economy = Bearconomy.get().getEconomy();
+        Currency currency = economy.getCurrency();
+        Party senderParty = Party.player(sender);
+        Party targetParty = Party.player(player);
 
         // withdraw the money from the sender's account
         Response response = economy.withdraw(senderParty, Transaction.of(amount, "sending money:pay:" + player.getName()));
