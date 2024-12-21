@@ -181,13 +181,11 @@ public final class BearconomyCommand extends AlpineCommand {
     @Description("Display a player's balance.")
     public void show(
             @Context CommandSender sender,
-            @OptionalArg("player") @Async OfflinePlayer player
+            @Arg("player") @Async Optional<OfflinePlayer> targetPlayer
     ) {
+        OfflinePlayer player = targetPlayer.orElseGet(() -> sender instanceof Player ? (Player) sender : null);
         if (player == null) {
-            player = sender instanceof Player ? (OfflinePlayer) sender : null;
-            if (player == null) {
-                return;
-            }
+            return;
         }
 
         // ensure player has joined the server
