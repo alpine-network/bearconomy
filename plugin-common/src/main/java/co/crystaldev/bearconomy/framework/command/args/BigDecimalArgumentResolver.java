@@ -2,6 +2,9 @@ package co.crystaldev.bearconomy.framework.command.args;
 
 import co.crystaldev.alpinecore.framework.command.AlpineArgumentResolver;
 import co.crystaldev.alpinecore.util.CollectionUtils;
+import co.crystaldev.bearconomy.Bearconomy;
+import co.crystaldev.bearconomy.framework.BearconomyPlugin;
+import co.crystaldev.bearconomy.framework.config.Config;
 import dev.rollczi.litecommands.argument.Argument;
 import dev.rollczi.litecommands.argument.parser.ParseResult;
 import dev.rollczi.litecommands.invocation.Invocation;
@@ -32,7 +35,11 @@ public final class BigDecimalArgumentResolver extends AlpineArgumentResolver<Big
             Matcher matcher = NUMBER_PATTERN.matcher(argument);
 
             if (!matcher.matches()) {
-                return ParseResult.failure("Invalid number format: " + argument);
+                BearconomyPlugin plugin = BearconomyPlugin.getInstance();
+                Config config = plugin.getConfiguration(Config.class);
+
+                return ParseResult.failure(config.error.build(plugin,
+                        "response", config.invalidNumber.build(plugin)));
             }
             String numberPart = matcher.group(1);
             String suffix = matcher.group(2);

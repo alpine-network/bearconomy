@@ -129,6 +129,9 @@ public final class Config extends AlpineConfig {
     public ConfigMessage invalidTransactionAmount = ConfigMessage.of(
             "The transaction amount must be a positive number");
 
+    public ConfigMessage invalidNumber = ConfigMessage.of(
+            "The number must be a valid positive number");
+
     public enum StorageType {
         // TODO: More storage types for managed economies
         JSON,
