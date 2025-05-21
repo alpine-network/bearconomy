@@ -1,24 +1,20 @@
-import java.nio.file.Files
-import java.nio.file.StandardCopyOption
-
 plugins {
     id("java")
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    alias(libs.plugins.shadow)
 }
 
 allprojects {
     apply(plugin = "java")
 
-    group = compileGroup()
-    version = compileVersion(true)
+    group = "${rootProject.properties["maven_group"]}.${rootProject.properties["maven_artifact"]}"
+    version = "${rootProject.properties["version"]}"
 
     val props = mapOf(
-        "mavenArtifact" to rootProject.property("maven_artifact") as String,
-        "pluginName" to rootProject.property("plugin_name") as String,
-        "pluginDescription" to rootProject.property("plugin_description") as String,
-        "pluginVersion" to compileVersion(true),
-        "pluginVersionRaw" to compileVersion(false),
-        "pluginGroup" to compileGroup(),
+        "mavenArtifact" to rootProject.properties["maven_artifact"],
+        "pluginName" to rootProject.properties["plugin_name"],
+        "pluginDescription" to rootProject.properties["plugin_description"],
+        "pluginVersion" to rootProject.version,
+        "pluginGroup" to rootProject.group,
     )
 
     repositories {
@@ -31,16 +27,16 @@ allprojects {
         maven("https://jitpack.io")
     }
 
-    configurations.create("shaded")
+    val libs = rootProject.libs
     dependencies {
-        compileOnly(group = "org.spigotmc", name = "spigot-api", version = project.property("server_version") as String)
-        compileOnly(group = "co.crystaldev", name = "alpinecore", version = "0.4.10-SNAPSHOT")
+        compileOnly(libs.spigot.api)
+        compileOnly(libs.alpinecore)
 
-        compileOnly(group = "me.clip", name = "placeholderapi", version = "2.11.6")
-        compileOnly(group = "com.github.MilkBowl", name = "VaultAPI", version = "1.7")
+        compileOnly(libs.papi)
+        compileOnly(libs.vault)
 
-        compileOnly(group = "org.projectlombok", name = "lombok", version = "1.18.30")
-        annotationProcessor(group = "org.projectlombok", name = "lombok", version = "1.18.30")
+        compileOnly(libs.lombok)
+        annotationProcessor(libs.lombok)
     }
 
     java {
@@ -59,43 +55,6 @@ allprojects {
             targetCompatibility = languageLevel
         }
 
-        register("replaceTokens") {
-            doLast {
-                // Define the temporary directory where the files will be copied to
-                val tempSrcDir = File(project.buildDir, "tempSrc")
-                if (tempSrcDir.exists())
-                    tempSrcDir.deleteRecursively()
-
-                // Copy all Java files from 'src/main/java' to the temporary directory
-                copy {
-                    from("src/main/java")
-                    into(tempSrcDir)
-                }
-
-                val javaFiles = project.fileTree(tempSrcDir) {
-                    include("**/*.java")
-                }
-
-                javaFiles.forEach { file ->
-                    var content = file.readText()
-                    props.forEach {
-                        val token = "{{ ${it.key} }}"
-                        if (content.contains(token)) {
-                            content = content.replace(token, it.value)
-                            file.writeText(content)
-                        }
-                    }
-                }
-            }
-        }
-
-        compileJava {
-            dependsOn("replaceTokens")
-
-            // Change the Java compilation source to the modified files in the temp directory
-            source = fileTree("${buildDir}/tempSrc")
-        }
-
         processResources {
             duplicatesStrategy = DuplicatesStrategy.INCLUDE
             inputs.properties(props)
@@ -109,10 +68,10 @@ allprojects {
     }
 }
 
-// handle shading
+// Create the shadowed jar (API + Impl)
 dependencies {
     listOf(project(":plugin-common"), project(":plugin-api")).forEach {
-        "shaded"(it) { isTransitive = false }
+        shadow(it) { isTransitive = false }
     }
 }
 
@@ -124,32 +83,16 @@ sourceSets {
 
 tasks {
     shadowJar {
-        configurations = listOf(project.configurations["shaded"])
+        configurations = listOf(project.configurations.shadow.get())
         archiveClassifier.set("dev-shadow")
-        archiveFileName.set("${rootProject.property("plugin_name")}-${compileVersion(true)}.jar")
-
-        doLast {
-            val input = archiveFile.get()
-            val outputDir = File(rootProject.rootDir, "builds")
-            val outputFile = File(outputDir, input.asFile.name)
-            outputDir.mkdirs()
-            Files.copy(input.asFile.toPath(), outputFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
-        }
+        archiveFileName.set("${rootProject.properties["plugin_name"]}-${rootProject.version}.jar")
     }
 
     jar {
         archiveClassifier.set("dev")
     }
-}
 
-fun compileGroup(): String {
-    return "${project.properties["maven_group"]}.${project.properties["maven_artifact"]}"
-}
-
-fun compileVersion(prerelease: Boolean): String {
-    val major = rootProject.properties["version_major"]
-    val minor = rootProject.properties["version_minor"]
-    val patch = rootProject.properties["version_patch"]
-    val preRelease = rootProject.properties["version_pre_release"]
-    return "${major}.${minor}.${patch}${if (!prerelease || preRelease == "none") "" else preRelease}"
+    build {
+        dependsOn(shadowJar)
+    }
 }
