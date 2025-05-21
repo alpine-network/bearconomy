@@ -1,0 +1,9 @@
+main: co.crystaldev.example.BearconomyExamplePlugin
+name: BearconomyExamplePlugin
+description: Example plugin for Bearconomy
+version: 1.0.0
+authors:
+  - BestBearr
+api-version: 1.13
+depend:
+  - AlpineCore
