@@ -2,6 +2,7 @@ package co.crystaldev.bearconomy.framework.integration;
 
 import co.crystaldev.bearconomy.Bearconomy;
 import co.crystaldev.bearconomy.economy.Economy;
+import co.crystaldev.bearconomy.framework.BearconomyPlugin;
 import co.crystaldev.bearconomy.party.Party;
 import com.google.common.collect.ImmutableMap;
 import me.clip.placeholderapi.expansion.Configurable;
@@ -49,7 +50,7 @@ final class BearconomyPlaceholderExpansion extends PlaceholderExpansion implemen
 
     @Override
     public @NotNull String getVersion() {
-        return "";
+        return BearconomyPlugin.getInstance().getDescription().getVersion();
     }
 
     @Override
