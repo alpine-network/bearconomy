@@ -12,9 +12,15 @@ public class DefaultCurrency implements Currency {
 
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#,###.##");
 
+    private final String id;
+
+    public DefaultCurrency(@NotNull String id) {
+        this.id = id;
+    }
+
     @Override
     public @NotNull String getId() {
-        return "default";
+        return this.id;
     }
 
     @Override

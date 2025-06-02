@@ -16,11 +16,11 @@ import java.math.BigDecimal;
  */
 public interface Economy {
 
-    Currency DEFAULT_CURRENCY = new DefaultCurrency();
-
     String DEFAULT_ID = "default";
 
     String EXPERIENCE_ID = "experience";
+
+    Currency DEFAULT_CURRENCY = new DefaultCurrency(DEFAULT_ID);
 
     /**
      * Returns the unique identifier for this economy.
