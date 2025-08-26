@@ -2,9 +2,9 @@
 alpinecore = "0.4.10-SNAPSHOT"
 lombok = "1.18.38"
 papi = "2.11.6"
-shadow = "9.0.0-beta13"
 spigot = "1.12.2-R0.1-SNAPSHOT"
 vault = "1.7"
+shadow = "9.0.2"                    # https://github.com/GradleUp/shadow/releases
 
 [libraries]
 alpinecore = { group = "co.crystaldev", name = "alpinecore", version.ref = "alpinecore" }
