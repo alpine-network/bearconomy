@@ -5,8 +5,8 @@ plugins {
 subprojects {
     apply {
         plugin("bearconomy.base-conventions")
-//        if (project.name != "example") {
-//            plugin("bearconomy.spotless-conventions")
-//        }
+        if (project.name != "example") {
+            plugin("bearconomy.spotless-conventions")
+        }
     }
 }
