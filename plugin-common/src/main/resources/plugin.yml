@@ -1,8 +1,7 @@
-
 main: co.crystaldev.bearconomy.framework.BearconomyPlugin
-name: ${pluginName}
-description: ${pluginDescription}
-version: ${pluginVersion}
+name: Bearconomy
+description: "${description}"
+version: "${version}"
 authors: [ BestBearr ]
 api-version: 1.13
 depend:

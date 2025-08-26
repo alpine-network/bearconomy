@@ -1,17 +1,22 @@
 [versions]
-alpinecore = "0.4.10-SNAPSHOT"
-lombok = "1.18.38"
-papi = "2.11.6"
-spigot = "1.12.2-R0.1-SNAPSHOT"
-vault = "1.7"
+alpinecore = "0.4.10-SNAPSHOT"      # https://github.com/alpine-network/alpine-core/releases
+lombok = "1.18.38"                  # https://projectlombok.org/changelog
+papi = "2.11.6"                     # https://github.com/PlaceholderAPI/PlaceholderAPI/releases
+spigot = "1.12.2-R0.1-SNAPSHOT"     # https://spigotmc.org/
+vault = "1.7"                       # https://github.com/MilkBowl/VaultAPI
+
+mavenPublish = "0.34.0"             # https://github.com/vanniktech/gradle-maven-publish-plugin/releases
 shadow = "9.0.2"                    # https://github.com/GradleUp/shadow/releases
+
+# Javadocs - https://github.com/alpine-network/alpine-core/blob/master/gradle/libs.versions.toml
+annotations = "26.0.2"
 
 [libraries]
 alpinecore = { group = "co.crystaldev", name = "alpinecore", version.ref = "alpinecore" }
 lombok = { group = "org.projectlombok", name = "lombok", version.ref = "lombok" }
 papi = { group = "me.clip", name = "placeholderapi", version.ref = "papi" }
-spigot-api = { group = "org.spigotmc", name = "spigot-api", version.ref = "spigot" }
+spigotApi = { group = "org.spigotmc", name = "spigot-api", version.ref = "spigot" }
 vault = { group = "com.github.MilkBowl", name = "VaultAPI", version.ref = "vault" }
 
-[plugins]
-shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
+mavenPublish-plugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "mavenPublish" }
+shadow-plugin = { module = "com.gradleup.shadow:shadow-gradle-plugin", version.ref = "shadow" }

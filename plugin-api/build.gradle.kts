@@ -1,35 +1,29 @@
 plugins {
-    id("maven-publish")
+    id("bearconomy.maven-conventions")
 }
 
-java {
-    withSourcesJar()
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["java"])
-
-            pom {
-                name.set("${rootProject.properties["plugin_name"]}-API")
-                description.set("${rootProject.properties["plugin_description"]}")
-
-                groupId = "${rootProject.properties["maven_group"]}"
-                artifactId = "${rootProject.properties["maven_artifact"]}-api"
-                version = "${rootProject.version}"
-                packaging = "jar"
-            }
-        }
+dependencies {
+    compileOnly(libs.alpinecore)
+    compileOnly(libs.spigotApi) {
+        exclude("junit")
+        exclude("org.yaml", "snakeyaml")
+        exclude("com.google.code.gson","gson")
     }
-    repositories {
-        maven {
-            name = "AlpineCloud"
-            url = uri("https://lib.alpn.cloud/alpine-public")
-            credentials {
-                username = System.getenv("ALPINE_MAVEN_NAME")
-                password = System.getenv("ALPINE_MAVEN_SECRET")
-            }
-        }
+}
+
+tasks {
+    named("build") {
+        dependsOn("javadoc")
+    }
+    withType<Jar>().configureEach {
+        includeLicenseFile()
+    }
+    withType<Javadoc>().configureEach {
+        enabled = true
+        applyLinks(
+            "https://docs.oracle.com/en/java/javase/11/docs/api/",
+            "https://hub.spigotmc.org/javadocs/spigot/",
+            "https://javadoc.io/doc/org.jetbrains/annotations/${libs.versions.annotations.get()}/",
+        )
     }
 }
