@@ -2,7 +2,7 @@
 
 A lightweight economy management and storage solution.
 
-> This plugin is currently in an early state of development and breaking changes **will** occur.
+> This plugin is currently in an early stage of development and breaking changes **will** occur.
 
 ### For Server Admins
 Any extension plugin built using this plugin will require you to add it as a plugin to your server.
@@ -12,20 +12,59 @@ This plugin requires the [AlpineCore](https://github.com/alpine-network/alpine-c
 The plugin has been explicitly verified to work on releases ranging from `1.8.8` to `1.21.5`.
 
 ### For Developers
-The library can be added as a dependency to your Gradle buildscript like so:
+To use Bearconomy, you must add it as a dependency to your project:
+
+<details>
+<summary>Gradle (Kotlin DSL)</summary>
+
+```kotlin
+repositories {
+    maven("https://lib.alpn.cloud/releases")
+}
+
+dependencies {
+    compileOnly("co.crystaldev:bearconomy-api:1.0.4")
+}
+```
+</details>
+
+
+<details>
+<summary>Gradle (Groovy DSL)</summary>
 
 ```groovy
 repositories {
     maven {
-        name 'Alpine Public'
-        url 'https://lib.alpn.cloud/alpine-public'
+        url 'https://lib.alpn.cloud/releases'
     }
 }
 
 dependencies {
-    compileOnly 'co.crystaldev:bearconomy:1.0.4'
+    compileOnly 'co.crystaldev:bearconomy-api:1.0.4'
 }
 ```
+</details>
+
+<details>
+<summary>Maven</summary>
+
+```xml
+<repositories>
+  <repository>
+    <name>Alpine Cloud</name>
+    <url>https://lib.alpn.cloud/releases</url>
+  </repository>
+</repositories>
+
+<dependencies>
+  <dependency>
+    <groupId>co.crystaldev</groupId>
+    <artifactId>bearconomy-api</artifactId>
+    <version>1.0.4</version>
+  </dependency>
+</dependencies>
+```
+</details>
 
 All classes and methods that are part of the API should have Javadocs. If one does not, open an issue.
 
