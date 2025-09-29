@@ -10,3 +10,8 @@ subprojects {
         }
     }
 }
+
+dependencies {
+    implementation(projects.bearconomyApi)
+    implementation(projects.bearconomyCommon)
+}
