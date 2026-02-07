@@ -19,7 +19,6 @@ import co.crystaldev.bearconomy.economy.Result;
 import co.crystaldev.bearconomy.economy.currency.Currency;
 import co.crystaldev.bearconomy.economy.transaction.Transaction;
 import co.crystaldev.bearconomy.framework.BearconomyPlugin;
-import co.crystaldev.bearconomy.framework.config.Config;
 import co.crystaldev.bearconomy.party.Party;
 import org.jetbrains.annotations.NotNull;
 
@@ -52,12 +51,10 @@ public final class GsonStorage extends EconomyStorage {
         if (!this.store.has(party.getId())) {
 
             // Set to the default balance
-            BearconomyPlugin plugin = BearconomyPlugin.getInstance();
-            Config config = plugin.getConfiguration(Config.class);
-            this.store.put(party.getId(), config.defaultBalance);
+            this.store.put(party.getId(), this.config.getDefaultBalance());
 
             // Return the default balance
-            return config.defaultBalance;
+            return this.config.getDefaultBalance();
         }
 
         return this.store.get(party.getId());

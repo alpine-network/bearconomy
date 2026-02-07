@@ -11,6 +11,7 @@ package co.crystaldev.bearconomy.framework.economy;
 import co.crystaldev.bearconomy.economy.*;
 import co.crystaldev.bearconomy.economy.currency.Currency;
 import co.crystaldev.bearconomy.economy.transaction.Transaction;
+import co.crystaldev.bearconomy.framework.config.Config;
 import co.crystaldev.bearconomy.party.ExperienceHolder;
 import co.crystaldev.bearconomy.party.Party;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +24,7 @@ import java.text.DecimalFormat;
  */
 public final class ExperienceEconomy implements Economy {
 
-    private final EconomyConfig config = new EconomyConfig(null);
+    private final EconomyConfig config = Config.getInstance().expEconomyConfig;
 
     @Override
     public @NotNull String getId() {

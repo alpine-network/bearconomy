@@ -17,9 +17,7 @@ import co.crystaldev.bearconomy.economy.Response;
 import co.crystaldev.bearconomy.economy.Result;
 import co.crystaldev.bearconomy.economy.currency.Currency;
 import co.crystaldev.bearconomy.economy.transaction.Transaction;
-import co.crystaldev.bearconomy.framework.BearconomyPlugin;
 import co.crystaldev.bearconomy.framework.DatabaseHandler;
-import co.crystaldev.bearconomy.framework.config.Config;
 import co.crystaldev.bearconomy.party.Party;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -197,9 +195,7 @@ public final class MySQLStorage extends EconomyStorage {
             }
             else {
                 // Set to the default balance
-                BearconomyPlugin plugin = BearconomyPlugin.getInstance();
-                Config config = plugin.getConfiguration(Config.class);
-                balance = config.defaultBalance;
+                balance = this.config.getDefaultBalance();
                 this.updateBalance(connection, party, balance);
             }
         }

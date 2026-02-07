@@ -21,7 +21,6 @@ import co.crystaldev.bearconomy.framework.storage.MySQLStorage;
 import co.crystaldev.bearconomy.party.Party;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 
@@ -39,10 +38,10 @@ public final class ManagedEconomy implements Economy {
 
     private final EconomyStorage storage;
 
-    public ManagedEconomy(@NotNull String id, @NotNull Currency currency, @Nullable EconomyConfig economyConfig) {
+    public ManagedEconomy(@NotNull String id, @NotNull Currency currency, @NotNull EconomyConfig economyConfig) {
         this.id = id;
         this.currency = currency;
-        this.config = economyConfig == null ? new EconomyConfig(null) : economyConfig;
+        this.config = economyConfig;
 
         Config config = Config.getInstance();
         switch (config.storageType) {

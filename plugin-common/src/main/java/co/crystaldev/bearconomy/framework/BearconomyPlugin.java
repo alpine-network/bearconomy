@@ -84,8 +84,8 @@ public final class BearconomyPlugin extends AlpinePlugin implements Bearconomy {
         this.log(String.format("Registering managed economy \"%s\"", id));
 
         Config bearconomyConfig = Config.getInstance();
-        if (bearconomyConfig.enforceMaxBalance && config == null) {
-            config = new EconomyConfig(bearconomyConfig.balanceCapacity);
+        if (config == null) {
+            config = bearconomyConfig.defaultEconomyConfig;
         }
 
         ManagedEconomy economy = new ManagedEconomy(id, currency, config);

@@ -10,6 +10,7 @@ package co.crystaldev.bearconomy.framework.config;
 
 import co.crystaldev.alpinecore.framework.config.AlpineConfig;
 import co.crystaldev.alpinecore.framework.config.object.ConfigMessage;
+import co.crystaldev.bearconomy.economy.EconomyConfig;
 import de.exlll.configlib.Comment;
 import lombok.Getter;
 
@@ -51,13 +52,24 @@ public final class Config extends AlpineConfig {
 
     @Comment({
             "",
-            "Standard Economy Configuration"
+            "Default Economy Configuration",
+            " - Any economy without defined config defaults here"
     })
-    public boolean enforceMaxBalance = true;
+    public EconomyConfig defaultEconomyConfig = new EconomyConfig(
+            new BigDecimal(25_000_000),
+            BigDecimal.ZERO,
+            true,
+            true);
 
-    public BigDecimal balanceCapacity = new BigDecimal(25_000_000);
-
-    public BigDecimal defaultBalance = new BigDecimal(0);
+    @Comment({
+            "",
+            "Experience Economy Configuration"
+    })
+    public EconomyConfig expEconomyConfig = new EconomyConfig(
+            null,
+            BigDecimal.ZERO,
+            false,
+            false);
 
     @Comment({
             "",
