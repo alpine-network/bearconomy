@@ -15,6 +15,7 @@ import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -130,4 +131,18 @@ public interface Bearconomy {
     default @Nullable Economy fetchEconomy(@NotNull Currency currency) {
         return this.getEconomy(currency).orElse(null);
     }
+
+    /**
+     * Retrieves a map of all registered economies.
+     *
+     * @return A map of all registered economies.
+     */
+    @NotNull Map<String, Economy> getEconomies();
+
+    /**
+     * Retrieves a map of all registered economies.
+     *
+     * @return A map of all registered economies.
+     */
+    @NotNull Map<Currency, Economy> getCurrencies();
 }

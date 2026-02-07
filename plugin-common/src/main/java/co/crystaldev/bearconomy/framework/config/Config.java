@@ -101,6 +101,9 @@ public final class Config extends AlpineConfig {
     public ConfigMessage paySelf = ConfigMessage.of(
             "%error_prefix% You are unable to send money to yourself");
 
+    public ConfigMessage payCurrencyNonTransfer = ConfigMessage.of(
+            "%error_prefix% You can not transfer this currency type!");
+
     public ConfigMessage hasNotPlayedBefore = ConfigMessage.of(
             "%error_prefix% %player_name% has not joined before");
 
@@ -151,6 +154,9 @@ public final class Config extends AlpineConfig {
 
     public ConfigMessage invalidNumber = ConfigMessage.of(
             "The number must be a valid positive number");
+
+    public ConfigMessage invalidCurrency = ConfigMessage.of(
+            "The currency type does not exist");
 
     public enum StorageType {
         // TODO: More storage types for managed economies

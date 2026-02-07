@@ -113,8 +113,13 @@ public final class BearconomyPlugin extends AlpinePlugin implements Bearconomy {
         return Optional.ofNullable(this.currencyToEconomy.get(currency));
     }
 
-    @NotNull
-    public Map<String, Economy> getEconomies() {
+    @Override
+    public @NotNull Map<String, Economy> getEconomies() {
         return this.idToEconomy;
+    }
+
+    @Override
+    public @NotNull Map<Currency, Economy> getCurrencies() {
+        return this.currencyToEconomy;
     }
 }
