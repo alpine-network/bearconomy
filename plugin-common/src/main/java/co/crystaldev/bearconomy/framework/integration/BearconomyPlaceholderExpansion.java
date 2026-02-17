@@ -97,7 +97,7 @@ final class BearconomyPlaceholderExpansion extends PlaceholderExpansion implemen
 
         // handle other economies, for example %bearconomy_balance_souls% and %bearconomy_balance_souls_formatted%
         if (params.startsWith("balance_")) {
-            String[] split = params.split("_", 2);
+            String[] split = params.split("_", 3);
             Optional<Economy> economy = bearconomy.getEconomy(split[1]);
 
             if (economy.isPresent()) {
