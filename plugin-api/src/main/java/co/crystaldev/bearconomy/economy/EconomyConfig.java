@@ -54,4 +54,54 @@ public class EconomyConfig {
     public boolean hasMaxBalance() {
         return this.enforceMaxBalance && this.maxBalance != null;
     }
+
+    public static @NotNull Builder builder() {
+        return new Builder();
+    }
+
+    public static final class Builder {
+
+        private BigDecimal maxBalance, defaultBalance = BigDecimal.ZERO;
+        private boolean enforceMaxBalance, transferable;
+
+        public @NotNull Builder maxBalance(@Nullable BigDecimal balance) {
+            this.maxBalance = balance == null ? BigDecimal.ZERO : balance;
+            return this;
+        }
+
+        public @NotNull Builder maxBalance(double balance) {
+            return this.maxBalance(new BigDecimal(balance));
+        }
+
+        public @NotNull Builder defaultBalance(@Nullable BigDecimal balance) {
+            this.defaultBalance = balance == null ? BigDecimal.ZERO : balance;
+            return this;
+        }
+
+        public @NotNull Builder defaultBalance(double balance) {
+            return this.defaultBalance(new BigDecimal(balance));
+        }
+
+        public @NotNull Builder enforceMaxBalance(boolean enforce) {
+            this.enforceMaxBalance = enforce;
+            return this;
+        }
+
+        public @NotNull Builder enforceMaxBalance() {
+            return this.enforceMaxBalance(true);
+        }
+
+        public @NotNull Builder transferableBetweenPlayers(boolean transferable) {
+            this.transferable = transferable;
+            return this;
+        }
+
+        public @NotNull Builder transferableBetweenPlayers() {
+            return this.transferableBetweenPlayers(true);
+        }
+
+        public @NotNull EconomyConfig build() {
+            return new EconomyConfig(this.maxBalance, this.defaultBalance, this.enforceMaxBalance, this.transferable);
+        }
+    }
 }

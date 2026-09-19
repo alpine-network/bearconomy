@@ -47,6 +47,10 @@ public final class BearconomyPlugin extends AlpinePlugin implements Bearconomy {
         this.registerEconomy(Economy.DEFAULT_ID, Economy.DEFAULT_CURRENCY);
         this.registerEconomy(new ExperienceEconomy());
 
+        Config.getInstance().definedEconomies.forEach((id, economy) -> {
+            this.registerEconomy(id, economy.buildCurrency(id));
+        });
+
         this.taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
             for (Economy economy : this.idToEconomy.values()) {
                 economy.flush();

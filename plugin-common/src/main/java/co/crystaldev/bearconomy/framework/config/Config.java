@@ -10,7 +10,10 @@ package co.crystaldev.bearconomy.framework.config;
 
 import co.crystaldev.alpinecore.framework.config.AlpineConfig;
 import co.crystaldev.alpinecore.framework.config.object.ConfigMessage;
+import co.crystaldev.alpinecore.util.CollectionUtils;
+import co.crystaldev.bearconomy.economy.DefinedConfigEconomy;
 import co.crystaldev.bearconomy.economy.EconomyConfig;
+import co.crystaldev.bearconomy.economy.currency.DefaultCurrency;
 import de.exlll.configlib.Comment;
 import lombok.Getter;
 
@@ -70,6 +73,32 @@ public final class Config extends AlpineConfig {
             BigDecimal.ZERO,
             false,
             false);
+
+    @Comment({
+            "",
+            "Custom Economies",
+            " - Each entry registers a standalone economy keyed by its identifier",
+            " ",
+            "singularName: Name used when the amount is one (e.g. cookie)",
+            "pluralName  : Name used for any other amount (e.g. cookies)",
+            "symbol      : Symbol prefixed to the amount (e.g. $)",
+            "format      : Layout of a formatted amount, supports %symbol% and %format%",
+            "formatName  : Layout of a named amount, supports %format% and %name%",
+            "config      : Economy behavior, defaults to the values above when omitted"
+    })
+    public Map<String, DefinedConfigEconomy> definedEconomies = CollectionUtils.linkedMap(
+            "alpine_cookies", new DefinedConfigEconomy(
+                    "cookie",
+                    "cookies",
+                    "$",
+                    EconomyConfig.builder()
+                            .maxBalance(100.00)
+                            .defaultBalance(10)
+                            .enforceMaxBalance()
+                            .transferableBetweenPlayers()
+                            .build()
+            )
+    );
 
     @Comment({
             "",
