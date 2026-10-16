@@ -189,7 +189,10 @@ public final class Config extends AlpineConfig {
 
     public enum StorageType {
         // TODO: More storage types for managed economies
+        FLAT_FILE,
+        MYSQL,
+        /** @deprecated renamed to {@link #FLAT_FILE} */
+        @Deprecated
         JSON,
-        MYSQL
     }
 }

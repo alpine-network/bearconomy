@@ -13,16 +13,18 @@ import co.crystaldev.bearconomy.economy.EconomyConfig;
 import co.crystaldev.bearconomy.economy.Response;
 import co.crystaldev.bearconomy.economy.currency.Currency;
 import co.crystaldev.bearconomy.economy.transaction.Transaction;
+import co.crystaldev.bearconomy.framework.BearconomyPlugin;
 import co.crystaldev.bearconomy.framework.config.Config;
 import co.crystaldev.bearconomy.framework.storage.EconomyStorage;
 import co.crystaldev.bearconomy.framework.storage.GenericStorage;
-import co.crystaldev.bearconomy.framework.storage.GsonStorage;
+import co.crystaldev.bearconomy.framework.storage.FlatFileStorage;
 import co.crystaldev.bearconomy.framework.storage.MySQLStorage;
 import co.crystaldev.bearconomy.party.Party;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
+import java.util.logging.Level;
 
 /**
  * @since 0.1.0
@@ -49,7 +51,10 @@ public final class ManagedEconomy implements Economy {
                 this.storage = new MySQLStorage(id, currency, this.config);
                 break;
             case JSON:
-                this.storage = new GsonStorage(id, currency, this.config);
+                BearconomyPlugin.getInstance().log(Level.WARNING,
+                        "Deprecated economy storage type used: JSON");
+            case FLAT_FILE:
+                this.storage = new FlatFileStorage(id, currency, this.config);
                 break;
             default:
                 this.storage = new GenericStorage(id, currency, this.config);
