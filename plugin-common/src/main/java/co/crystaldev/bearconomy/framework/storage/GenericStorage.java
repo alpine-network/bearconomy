@@ -28,7 +28,7 @@ public final class GenericStorage extends EconomyStorage {
         super(id, currency, config);
 
         BearconomyPlugin.getInstance().log(Level.WARNING,
-                String.format("No storage provider is being used for the \"%s\" economy", id));
+                String.format("&cNo storage provider is being used for the &d%s &ceconomy", id));
     }
 
     @Override

@@ -78,14 +78,14 @@ public final class BearconomyPlugin extends AlpinePlugin implements Bearconomy {
 
     @Override
     public void registerEconomy(@NotNull Economy economy) {
-        this.log(String.format("Registering economy \"%s\"", economy.getId()));
+        this.log(String.format("&aRegistering economy &d%s", economy.getId()));
         this.idToEconomy.put(economy.getId(), economy);
         this.currencyToEconomy.put(economy.getCurrency(), economy);
     }
 
     @Override
     public void registerEconomy(@NotNull String id, @NotNull Currency currency, @Nullable EconomyConfig config) {
-        this.log(String.format("Registering managed economy \"%s\"", id));
+        this.log(String.format("&aRegistering managed economy &d%s", id));
 
         Config bearconomyConfig = Config.getInstance();
         if (config == null) {

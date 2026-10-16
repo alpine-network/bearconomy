@@ -40,7 +40,7 @@ final class VaultIntegrationEngine extends AlpineIntegrationEngine implements Ec
 
         RegisteredServiceProvider<Economy> serviceProvider = plugin.getServer().getServicesManager().getRegistration(Economy.class);
         if (serviceProvider != null) {
-            plugin.log(Level.WARNING, String.format("Replacing economy provider \"%s\" with Bearconomy", serviceProvider.getPlugin().getName()));
+            plugin.log(Level.WARNING, String.format("&cReplacing economy provider &d%s &cwith Bearconomy", serviceProvider.getPlugin().getName()));
         }
 
         plugin.getServer().getServicesManager().register(Economy.class, this, plugin, ServicePriority.Highest);

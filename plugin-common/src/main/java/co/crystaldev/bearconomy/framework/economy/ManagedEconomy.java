@@ -52,7 +52,7 @@ public final class ManagedEconomy implements Economy {
                 break;
             case JSON:
                 BearconomyPlugin.getInstance().log(Level.WARNING,
-                        "Deprecated economy storage type used: JSON");
+                        "&cDeprecated economy storage type used: &dJSON");
             case FLAT_FILE:
                 this.storage = new FlatFileStorage(id, currency, this.config);
                 break;

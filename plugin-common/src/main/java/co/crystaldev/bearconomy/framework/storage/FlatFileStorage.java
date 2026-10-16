@@ -50,7 +50,7 @@ public final class FlatFileStorage extends EconomyStorage {
         this.directory = new File(BearconomyPlugin.getInstance().getDataFolder(), "storage/" + id);
         if (!this.directory.exists() && !this.directory.mkdirs()) {
             BearconomyPlugin.getInstance().log(Level.SEVERE,
-                    String.format("Unable to create storage directory for the \"%s\" economy", id));
+                    String.format("&cUnable to create storage directory for the &d%s &ceconomy", id));
         }
     }
 
@@ -124,7 +124,7 @@ public final class FlatFileStorage extends EconomyStorage {
                 return new BigDecimal(content);
             }
             catch (Exception ex) {
-                BearconomyPlugin.getInstance().log(String.format("Error reading balance for %s in the \"%s\" economy", key, this.id), ex);
+                BearconomyPlugin.getInstance().log(String.format("&cError reading balance for &d%s &cin the &d%s &ceconomy", key, this.id), ex);
             }
         }
 
@@ -141,7 +141,7 @@ public final class FlatFileStorage extends EconomyStorage {
             return true;
         }
         catch (IOException ex) {
-            BearconomyPlugin.getInstance().log(String.format("Error saving balance for %s in the \"%s\" economy", key, this.id), ex);
+            BearconomyPlugin.getInstance().log(String.format("&cError saving balance for &d%s &cin the &d%s &ceconomy", key, this.id), ex);
             return false;
         }
     }
