@@ -72,8 +72,8 @@ public final class BearconomyPlugin extends AlpinePlugin implements Bearconomy {
 
     @Override
     public void setupVariables(@NotNull VariableConsumer variableConsumer) {
-        variableConsumer.addVariable("prefix", "<bracket>[<info>Bearconomy</info>]</bracket>");
-        variableConsumer.addVariable("error_prefix", "<bracket>[<error>Bearconomy</error>]</bracket>");
+        variableConsumer.addVariable("prefix", "<info>Bearconomy</info> <bracket>»</bracket>");
+        variableConsumer.addVariable("error_prefix", "<error>Bearconomy</error> <bracket>»</bracket>");
     }
 
     @Override
