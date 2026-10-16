@@ -33,9 +33,9 @@ public final class Config extends AlpineConfig {
     @Comment({
             "The default storage type used for managed economies.",
             " ",
-            "Valid Types: MYSQL, JSON"
+            "Valid Types: FLAT_FILE, MYSQL"
     })
-    public StorageType storageType = StorageType.JSON;
+    public StorageType storageType = StorageType.FLAT_FILE;
 
     @Comment({
             "",
